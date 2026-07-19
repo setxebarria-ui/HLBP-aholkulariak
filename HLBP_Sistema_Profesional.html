@@ -1904,6 +1904,25 @@
                     firebasePrest = false;
                     actualizarSyncEgoera();
                 });
+                // Aholkularien datuak (izen errealak barne) Firebase-tik.
+                // Izenak datu-basean daude, ez GitHub-eko kode publikoan.
+                db.ref('aholkulariak').on('value', (snap) => {
+                    const datuak = snap.val();
+                    if (datuak && Object.keys(datuak).length > 0) {
+                        aholkulariak = Object.values(datuak);
+                        localStorage.setItem('hlbp_aholkulariak', JSON.stringify(aholkulariak));
+                        if (usuarioActual) {
+                            const eguneratua = aholkulariak.find(a => a.codigo === usuarioActual.codigo);
+                            if (eguneratua) {
+                                usuarioActual = eguneratua;
+                                document.getElementById('userNameDisplay').textContent = usuarioActual.nombre;
+                            }
+                        }
+                        refrescarVistas();
+                    }
+                }, (err) => {
+                    console.error('Aholkulariak sinkronizatzean errorea:', err);
+                });
             } catch (e) {
                 console.error('Firebase hasieraketa errorea:', e);
                 db = null;
@@ -2501,6 +2520,7 @@
             });
 
             localStorage.setItem('hlbp_aholkulariak', JSON.stringify(aholkulariak));
+            guardarAholkulariakFirebase();
 
             alert('✅ Aholkularia gehitu da ✅\nKodigoa: ' + codigo);
 
@@ -2517,8 +2537,21 @@
             if (confirm('Ziur al zaude ezabatu nahi duzula?')) {
                 aholkulariak = aholkulariak.filter(a => a.codigo !== codigo);
                 localStorage.setItem('hlbp_aholkulariak', JSON.stringify(aholkulariak));
+                guardarAholkulariakFirebase();
                 actualizarAdminPanel();
             }
+        }
+
+        // Aholkularien zerrenda OSOA Firebase-ra idatzi (gehitze/ezabatze ostean),
+        // gailu guztiek bertsio bera izan dezaten.
+        function guardarAholkulariakFirebase() {
+            if (!db) return;
+            const mapa = {};
+            aholkulariak.forEach(a => mapa[a.codigo] = a);
+            db.ref('aholkulariak').set(mapa).catch(err => {
+                console.error('Aholkulariak Firebase-ra gordetzean errorea:', err);
+                alert('⚠️ Ezin izan da hodeira sinkronizatu. Aldaketa lokalean bakarrik gorde da.');
+            });
         }
 
         // ============ EXPORTACIONES ============
