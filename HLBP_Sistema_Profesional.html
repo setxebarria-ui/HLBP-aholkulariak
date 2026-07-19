@@ -2111,9 +2111,9 @@
             registros.push(nuevoRegistro);
             localStorage.setItem('hlbp_registros', JSON.stringify(registros));
 
-            const alert = document.getElementById('successAlert');
-            alert.classList.add('show');
-            setTimeout(() => alert.classList.remove('show'), 3000);
+            const alertDiv = document.getElementById('successAlert');
+            alertDiv.classList.add('show');
+            setTimeout(() => alertDiv.classList.remove('show'), 3000);
 
             limpiarRegistro();
             actualizarHistorial();
