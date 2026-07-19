@@ -1,0 +1,2460 @@
+﻿<!DOCTYPE html>
+<html lang="eu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLBP - Sistema Profesional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --success: #51cf66;
+            --danger: #ff6b6b;
+            --warning: #ffd43b;
+            --info: #74c0fc;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .login-box p {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 13px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-error {
+            background: #ffe0e0;
+            color: #c00;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        .app-container {
+            display: none;
+            min-height: 100vh;
+            background: var(--light);
+        }
+
+        .app-container.show {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--dark);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+        .user-card strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .user-badge {
+            display: inline-block;
+            background: var(--info);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 15px;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 20px;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+        }
+
+        .logout-btn {
+            width: 100%;
+            margin-top: 30px;
+            background: var(--danger);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card h3 {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: var(--light);
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--success);
+        }
+
+        .badge-admin {
+            background: rgba(255, 212, 59, 0.1);
+            color: #f59f00;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .alert-success {
+            background: rgba(81, 207, 102, 0.1);
+            color: #2b8a3e;
+            display: none;
+        }
+
+        .alert-success.show {
+            display: block;
+        }
+
+        .centro-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .centro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left-color: var(--secondary);
+        }
+
+        .centro-card h3 {
+            font-size: 16px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .centro-card p {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .centro-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .centro-stat-item {
+            text-align: center;
+        }
+
+        .centro-stat-item .label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .centro-stat-item .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 250px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h1>🎯 HLBP</h1>
+            <p>Sistema Profesional de Kudeaketa</p>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>Kodigoa</label>
+                    <input type="text" id="codigoInput" placeholder="Sartu zure kodiga" autocomplete="off">
+                </div>
+                <button class="login-btn" onclick="login()">Sartu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div class="app-container" id="appContainer">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🎯 HLBP</h2>
+            </div>
+
+            <div class="user-card">
+                <strong id="userNameDisplay">Aholkularia</strong>
+                <p id="userSpecialtyDisplay" style="margin-bottom: 5px;">Espezialitatea</p>
+                <span class="user-badge" id="userTypeDisplay">Aholkularia</span>
+            </div>
+
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="showPage('registro')">📝 Erregistroa</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="showPage('historial')">📋 Historiala</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="showPage('centros')">🏫 Zentroetako Erregistroa</button>
+                </li>
+            </ul>
+
+            <button class="logout-btn" onclick="logout()">Irten</button>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- DASHBOARD -->
+            <div class="page active" id="dashboardPage">
+                <div class="page-header">
+                    <h1 id="dashboardTitle">Ongi etorri!</h1>
+                    <p id="dateDisplay"></p>
+                </div>
+
+                <div class="stats-grid" id="statsContainer"></div>
+
+                <div class="section" id="userInfoSection"></div>
+                <div class="section" id="userCentrosSection"></div>
+            </div>
+
+            <!-- REGISTRO -->
+            <div class="page" id="registroPage">
+                <div class="page-header">
+                    <h1>📝 Eginkizun Berria</h1>
+                </div>
+
+                <div class="alert alert-success" id="successAlert">
+                    ✓ Eginkizuna ondo gorde da!
+                </div>
+
+                <div class="section">
+                    <h2>Erregistroaren datuak</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Aholkularia</label>
+                            <input type="text" id="registroAholkularia" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Ikastetxea *</label>
+                            <select id="registroCentro" onchange="updateTareas()">
+                                <option value="">Aukeratu ikastetxea...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Eginkizuna *</label>
+                            <select id="registroTarea" onchange="updateEremuak()">
+                                <option value="">Aukeratu eginkizuna...</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grupoIkaslea">
+                            <label>Ikaslearen ID *</label>
+                            <input type="text" id="registroIkaslea" placeholder="Adib: IK-0234 (EZ izen-abizenik)">
+                        </div>
+                        <div class="form-group" id="grupoEbaluazioMota" style="display: none;">
+                            <label>Ebaluazio mota *</label>
+                            <select id="registroEbaluazioMota">
+                                <option value="">Aukeratu...</option>
+                                <option value="AGH">AGH</option>
+                                <option value="AEN">AEN</option>
+                                <option value="Bestelakoa">Bestelakoa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Data *</label>
+                            <input type="date" id="registroData">
+                        </div>
+                        <div class="form-group">
+                            <label>Egoera</label>
+                            <select id="registroEgoera">
+                                <option value="Egin gabe">Egin gabe</option>
+                                <option value="Eginda">Eginda</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grupoZehaztu" style="display: none; grid-column: 1 / -1;">
+                            <label>Zehaztu *</label>
+                            <textarea id="registroZehaztu" placeholder="Zehaztu eginbeharrak..." style="min-height: 60px;"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Oharrak</label>
+                            <textarea id="registroOharrak" placeholder="Gehitu ohar... (EZ idatzi ikasleen izen-abizenik)" style="min-height: 80px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="guardarRegistro()">💾 Gorde</button>
+                        <button class="btn btn-secondary" onclick="limpiarRegistro()">🔄 Garbitu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORIAL -->
+            <div class="page" id="historialPage">
+                <div class="page-header">
+                    <h1>📋 Historiala</h1>
+                </div>
+                <div class="section">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Ikastetxea</th>
+                                    <th>Eginkizuna</th>
+                                    <th>Ikaslea</th>
+                                    <th>Egoera</th>
+                                    <th>Ekintza</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historialTable">
+                                <tr><td colspan="6" class="no-data">Ez dago erregistrorik</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZENTROETAKO ERREGISTROA -->
+            <div class="page" id="centrosPage">
+                <div class="page-header">
+                    <h1>🏫 Zentroetako Erregistroa</h1>
+                    <p>Ikastetxe bakoitzaren eginkizunak eta eskaera guztiak</p>
+                </div>
+
+                <div id="centroDetalle" style="display: none;">
+                    <div class="section">
+                        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+                            <button class="btn btn-secondary" onclick="volverCentros()" style="flex: 0;">⬅️ Atzera</button>
+                            <h2 id="centroNombre" style="margin: 0; color: var(--dark);">Centro</h2>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3>Erregistro Osoa</h3>
+                                <div class="number" id="centroTotalRegistros">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Egunkoak</h3>
+                                <div class="number" id="centroRegistrosHoy">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Aholkulariak</h3>
+                                <div class="number" id="centroAholkulariak">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Eginkizun Motak</h3>
+                                <div class="number" id="centroTareas">0</div>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Aholkularia</th>
+                                        <th>Eginkizuna</th>
+                                        <th>Ikaslea</th>
+                                        <th>Egoera</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="centroRegistrosTable">
+                                    <tr><td colspan="5" class="no-data">Ez dago erregistrorik</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="centroLista" style="display: block;">
+                    <div class="section">
+                        <h2>🏢 Zentroak Zerrenda</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;" id="centrosGrid">
+                            <div class="no-data">Kargan...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMIN PANEL -->
+            <div class="page" id="adminPage">
+                <div class="page-header">
+                    <h1>⚙️ Administrazioa</h1>
+                    <p id="adminSubtitle"></p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Erregistro Osoa</h3>
+                        <div class="number" id="adminTotalRegistros">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Aholkulariak</h3>
+                        <div class="number" id="adminTotalAholkulariak">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Zentro Desberdina</h3>
+                        <div class="number" id="adminTotalCentros">0</div>
+                    </div>
+                </div>
+
+                <!-- GESTIÓN DE USUARIOS -->
+                <div class="section" id="adminGestionSekcio">
+                    <h2>👥 Aholkulariak Kudeaketa</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Izena *</label>
+                            <input type="text" id="adminNewNombre" placeholder="Aholkulariaren izena">
+                        </div>
+                        <div class="form-group">
+                            <label>Kodigoa *</label>
+                            <input type="text" id="adminNewCodigo" placeholder="Adib: AHL094">
+                        </div>
+                        <div class="form-group">
+                            <label>Berritzegune *</label>
+                            <input type="text" id="adminNewBerritzegune" placeholder="BERRITZEGUNE">
+                        </div>
+                        <div class="form-group">
+                            <label>Espezialitatea *</label>
+                            <select id="adminNewEspecialidad">
+                                <option value="">Aukeratu...</option>
+                                <option value="Inklusioa">Inklusioa</option>
+                                <option value="Bizikidetza">Bizikidetza</option>
+                                <option value="Posbentzioa">Posbentzioa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Zentroak (kodigo, zatituta koma)</label>
+                            <input type="text" id="adminNewCentros" placeholder="010258,010135,010138">
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="agregarAholkularia()">➕ Gehitu Aholkularia</button>
+                    </div>
+                </div>
+
+                <!-- TABLA DE USUARIOS -->
+                <div class="section">
+                    <h2>📊 Aholkulariak Zerrenda</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kodigoa</th>
+                                    <th>Izena</th>
+                                    <th>Berritzegune</th>
+                                    <th>Espezialitatea</th>
+                                    <th>Zentroak</th>
+                                    <th>Erregistroak</th>
+                                    <th id="aktzioaHead">Ekintza</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTable">
+                                <tr><td colspan="7" class="no-data">Kargan...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TODOS LOS REGISTROS -->
+                <div class="section">
+                    <h2>📋 Guztien Erregistroak</h2>
+                    <div class="button-group" id="exportButtonGroup">
+                        <button class="btn btn-primary" onclick="exportarExcelCompleto()">📥 Enportatu Excel Osoa</button>
+                        <button class="btn btn-secondary" onclick="exportarJSON()">💾 Deskargatü Backup</button>
+                    </div>
+                    <div class="table-container" style="margin-top: 20px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Aholkularia</th>
+                                    <th>Ikastetxea</th>
+                                    <th>Eginkizuna</th>
+                                    <th>Ikaslea</th>
+                                    <th>Egoera</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminAllRegistrosTable">
+                                <tr><td colspan="6" class="no-data">Ez dago erregistrorik</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.example.js"></script>
+    <script src="data.js"></script>
+    <script>
+        // ============ DATOS ESTÁTICOS ============
+        // Datu lehenetsiak (izen generikoak - GitHub bertsio publikorako).
+        // Lokalean data.js fitxategiak gainidazten ditu izen errealekin.
+        const AHOLKULARI_LEHENETSIAK = [
+            { codigo: "AHL001", nombre: "Aholkulari 1", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["015015"] },
+            { codigo: "AHL002", nombre: "Aholkulari 2", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010258"] },
+            { codigo: "AHL003", nombre: "Aholkulari 3", berritzegune: "BERRITZEGUNE B04", especialidad: "Inklusioa", centros: ["014064"] },
+            { codigo: "AHL004", nombre: "Aholkulari 4", berritzegune: "BERRITZEGUNE G04", especialidad: "Inklusioa", centros: ["012592"] },
+            { codigo: "AHL005", nombre: "Aholkulari 5", berritzegune: "BERRITZEGUNE G06", especialidad: "Inklusioa", centros: ["012031"] },
+            { codigo: "AHL006", nombre: "Aholkulari 6", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["015015"] },
+            { codigo: "AHL007", nombre: "Aholkulari 7", berritzegune: "BERRITZEGUNE G02", especialidad: "Inklusioa", centros: ["012464"] },
+            { codigo: "AHL008", nombre: "Aholkulari 8", berritzegune: "BERRITZEGUNE B05", especialidad: "Inklusioa", centros: ["014401"] },
+            { codigo: "AHL009", nombre: "Aholkulari 9", berritzegune: "BERRITZEGUNE G04", especialidad: "Inklusioa", centros: ["012382"] },
+            { codigo: "AHL010", nombre: "Aholkulari 10", berritzegune: "BERRITZEGUNE B05", especialidad: "Inklusioa", centros: ["014799"] },
+            { codigo: "AHL011", nombre: "Aholkulari 11", berritzegune: "BERRITZEGUNE G04", especialidad: "Inklusioa", centros: ["012581"] },
+            { codigo: "AHL012", nombre: "Aholkulari 12", berritzegune: "BERRITZEGUNE B06", especialidad: "Inklusioa", centros: ["014341"] },
+            { codigo: "AHL013", nombre: "Aholkulari 13", berritzegune: "BERRITZEGUNE G04", especialidad: "Inklusioa", centros: ["012034"] },
+            { codigo: "AHL014", nombre: "Aholkulari 14", berritzegune: "BERRITZEGUNE B10", especialidad: "Inklusioa", centros: ["014284"] },
+            { codigo: "AHL015", nombre: "Aholkulari 15", berritzegune: "BERRITZEGUNE B03", especialidad: "Inklusioa", centros: ["015666"] },
+            { codigo: "AHL016", nombre: "Aholkulari 16", berritzegune: "BERRITZEGUNE B06", especialidad: "Inklusioa", centros: ["014086"] },
+            { codigo: "AHL017", nombre: "Aholkulari 17", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010160"] },
+            { codigo: "AHL018", nombre: "Aholkulari 18", berritzegune: "BERRITZEGUNE B04", especialidad: "Inklusioa", centros: ["014046"] },
+            { codigo: "AHL019", nombre: "Aholkulari 19", berritzegune: "BERRITZEGUNE B05", especialidad: "Inklusioa", centros: ["014449"] },
+            { codigo: "AHL020", nombre: "Aholkulari 20", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010248"] },
+            { codigo: "AHL021", nombre: "Aholkulari 21", berritzegune: "BERRITZEGUNE G03", especialidad: "Inklusioa", centros: ["012991"] },
+            { codigo: "AHL022", nombre: "Aholkulari 22", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["012507"] },
+            { codigo: "AHL023", nombre: "Aholkulari 23", berritzegune: "BERRITZEGUNE B04", especialidad: "Inklusioa", centros: ["014068"] },
+            { codigo: "AHL024", nombre: "Aholkulari 24", berritzegune: "BERRITZEGUNE G03", especialidad: "Inklusioa", centros: ["012677"] },
+            { codigo: "AHL025", nombre: "Aholkulari 25", berritzegune: "BERRITZEGUNE B08", especialidad: "Inklusioa", centros: ["014335"] },
+            { codigo: "AHL026", nombre: "Aholkulari 26", berritzegune: "BERRITZEGUNE G04", especialidad: "Inklusioa", centros: ["012384"] },
+            { codigo: "AHL027", nombre: "Aholkulari 27", berritzegune: "BERRITZEGUNE G02", especialidad: "Inklusioa", centros: ["012428"] },
+            { codigo: "AHL028", nombre: "Aholkulari 28", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010140"] },
+            { codigo: "AHL029", nombre: "Aholkulari 29", berritzegune: "BERRITZEGUNE B10", especialidad: "Inklusioa", centros: ["014025"] },
+            { codigo: "AHL030", nombre: "Aholkulari 30", berritzegune: "BERRITZEGUNE B04", especialidad: "Inklusioa", centros: ["014051"] },
+            { codigo: "AHL031", nombre: "Aholkulari 31", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["015104"] },
+            { codigo: "AHL032", nombre: "Aholkulari 32", berritzegune: "BERRITZEGUNE G05", especialidad: "Inklusioa", centros: ["012726"] },
+            { codigo: "AHL033", nombre: "Aholkulari 33", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["014384"] },
+            { codigo: "AHL034", nombre: "Aholkulari 34", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["014727"] },
+            { codigo: "AHL035", nombre: "Aholkulari 35", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014508"] },
+            { codigo: "AHL036", nombre: "Aholkulari 36", berritzegune: "BERRITZEGUNE B03", especialidad: "Inklusioa", centros: ["014441"] },
+            { codigo: "AHL037", nombre: "Aholkulari 37", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014618"] },
+            { codigo: "AHL038", nombre: "Aholkulari 38", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["012494"] },
+            { codigo: "AHL039", nombre: "Aholkulari 39", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014663"] },
+            { codigo: "AHL040", nombre: "Aholkulari 40", berritzegune: "BERRITZEGUNE B06", especialidad: "Inklusioa", centros: ["015014"] },
+            { codigo: "AHL041", nombre: "Aholkulari 41", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["013641"] },
+            { codigo: "AHL042", nombre: "Aholkulari 42", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["015832"] },
+            { codigo: "AHL043", nombre: "Aholkulari 43", berritzegune: "BERRITZEGUNE B03", especialidad: "Inklusioa", centros: ["014797"] },
+            { codigo: "AHL044", nombre: "Aholkulari 44", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["015371"] },
+            { codigo: "AHL045", nombre: "Aholkulari 45", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["012186"] },
+            { codigo: "AHL046", nombre: "Aholkulari 46", berritzegune: "BERRITZEGUNE B08", especialidad: "Inklusioa", centros: ["015774"] },
+            { codigo: "AHL047", nombre: "Aholkulari 47", berritzegune: "BERRITZEGUNE G06", especialidad: "Inklusioa", centros: ["012432"] },
+            { codigo: "AHL048", nombre: "Aholkulari 48", berritzegune: "BERRITZEGUNE B03", especialidad: "Inklusioa", centros: ["015775"] },
+            { codigo: "AHL049", nombre: "Aholkulari 49", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["012544"] },
+            { codigo: "AHL050", nombre: "Aholkulari 50", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010503"] },
+            { codigo: "AHL051", nombre: "Aholkulari 51", berritzegune: "BERRITZEGUNE B10", especialidad: "Inklusioa", centros: ["014256"] },
+            { codigo: "AHL052", nombre: "Aholkulari 52", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["012512"] },
+            { codigo: "AHL053", nombre: "Aholkulari 53", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["014291"] },
+            { codigo: "AHL054", nombre: "Aholkulari 54", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["014157"] },
+            { codigo: "AHL055", nombre: "Aholkulari 55", berritzegune: "BERRITZEGUNE B03", especialidad: "Inklusioa", centros: ["014792"] },
+            { codigo: "AHL056", nombre: "Aholkulari 56", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010618"] },
+            { codigo: "AHL057", nombre: "Aholkulari 57", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014140"] },
+            { codigo: "AHL058", nombre: "Aholkulari 58", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["015830"] },
+            { codigo: "AHL059", nombre: "Aholkulari 59", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010053"] },
+            { codigo: "AHL060", nombre: "Aholkulari 60", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["014034"] },
+            { codigo: "AHL061", nombre: "Aholkulari 61", berritzegune: "BERRITZEGUNE B05", especialidad: "Inklusioa", centros: ["014285"] },
+            { codigo: "AHL062", nombre: "Aholkulari 62", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010103"] },
+            { codigo: "AHL063", nombre: "Aholkulari 63", berritzegune: "BERRITZEGUNE G02", especialidad: "Inklusioa", centros: ["012357"] },
+            { codigo: "AHL064", nombre: "Aholkulari 64", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010009"] },
+            { codigo: "AHL065", nombre: "Aholkulari 65", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014114"] },
+            { codigo: "AHL066", nombre: "Aholkulari 66", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["015094"] },
+            { codigo: "AHL067", nombre: "Aholkulari 67", berritzegune: "BERRITZEGUNE G02", especialidad: "Inklusioa", centros: ["013506"] },
+            { codigo: "AHL068", nombre: "Aholkulari 68", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010219"] },
+            { codigo: "AHL069", nombre: "Aholkulari 69", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["014512"] },
+            { codigo: "AHL070", nombre: "Aholkulari 70", berritzegune: "BERRITZEGUNE G02", especialidad: "Inklusioa", centros: ["013002"] },
+            { codigo: "AHL071", nombre: "Aholkulari 71", berritzegune: "BERRITZEGUNE B06", especialidad: "Inklusioa", centros: ["014088"] },
+            { codigo: "AHL072", nombre: "Aholkulari 72", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["015932"] },
+            { codigo: "AHL073", nombre: "Aholkulari 73", berritzegune: "BERRITZEGUNE G02", especialidad: "Inklusioa", centros: ["012965"] },
+            { codigo: "AHL074", nombre: "Aholkulari 74", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010513"] },
+            { codigo: "AHL075", nombre: "Aholkulari 75", berritzegune: "BERRITZEGUNE G03", especialidad: "Inklusioa", centros: ["012970"] },
+            { codigo: "AHL076", nombre: "Aholkulari 76", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014187"] },
+            { codigo: "AHL077", nombre: "Aholkulari 77", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010512"] },
+            { codigo: "AHL078", nombre: "Aholkulari 78", berritzegune: "BERRITZEGUNE G04", especialidad: "Inklusioa", centros: ["012113"] },
+            { codigo: "AHL079", nombre: "Aholkulari 79", berritzegune: "BERRITZEGUNE G06", especialidad: "Inklusioa", centros: ["012336"] },
+            { codigo: "AHL080", nombre: "Aholkulari 80", berritzegune: "BERRITZEGUNE G03", especialidad: "Inklusioa", centros: ["012046"] },
+            { codigo: "AHL081", nombre: "Aholkulari 81", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010046"] },
+            { codigo: "AHL082", nombre: "Aholkulari 82", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010723"] },
+            { codigo: "AHL083", nombre: "Aholkulari 83", berritzegune: "BERRITZEGUNE G05", especialidad: "Inklusioa", centros: ["013556"] },
+            { codigo: "AHL084", nombre: "Aholkulari 84", berritzegune: "BERRITZEGUNE B05", especialidad: "Inklusioa", centros: ["015757"] },
+            { codigo: "AHL085", nombre: "Aholkulari 85", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010221"] },
+            { codigo: "AHL086", nombre: "Aholkulari 86", berritzegune: "BERRITZEGUNE G06", especialidad: "Inklusioa", centros: ["012957"] },
+            { codigo: "AHL087", nombre: "Aholkulari 87", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["015376"] },
+            { codigo: "AHL088", nombre: "Aholkulari 88", berritzegune: "BERRITZEGUNE B06", especialidad: "Inklusioa", centros: ["014237"] },
+            { codigo: "AHL089", nombre: "Aholkulari 89", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["014137"] },
+            { codigo: "AHL090", nombre: "Aholkulari 90", berritzegune: "BERRITZEGUNE G06", especialidad: "Inklusioa", centros: ["012005"] },
+            { codigo: "AHL091", nombre: "Aholkulari 91", berritzegune: "BERRITZEGUNE B08", especialidad: "Inklusioa", centros: ["014486"] },
+            { codigo: "AHL092", nombre: "Aholkulari 92", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010333"] },
+            { codigo: "AHL093", nombre: "Aholkulari 93", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["015762"] },
+            { codigo: "MASTER", nombre: "Administrador Osoa", berritzegune: "ADMIN", especialidad: "Admin", centros: [], tipo: "master" },
+            { codigo: "ADMIN001", nombre: "Admin Berritzegune A01", berritzegune: "BERRITZEGUNE A01", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN002", nombre: "Admin Berritzegune A02", berritzegune: "BERRITZEGUNE A02", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN003", nombre: "Admin Berritzegune B01", berritzegune: "BERRITZEGUNE B01", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN004", nombre: "Admin Berritzegune B02", berritzegune: "BERRITZEGUNE B02", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN005", nombre: "Admin Berritzegune B03", berritzegune: "BERRITZEGUNE B03", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN006", nombre: "Admin Berritzegune B04", berritzegune: "BERRITZEGUNE B04", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN007", nombre: "Admin Berritzegune B05", berritzegune: "BERRITZEGUNE B05", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN008", nombre: "Admin Berritzegune B06", berritzegune: "BERRITZEGUNE B06", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN009", nombre: "Admin Berritzegune B07", berritzegune: "BERRITZEGUNE B07", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN010", nombre: "Admin Berritzegune B08", berritzegune: "BERRITZEGUNE B08", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN011", nombre: "Admin Berritzegune B09", berritzegune: "BERRITZEGUNE B09", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN012", nombre: "Admin Berritzegune B10", berritzegune: "BERRITZEGUNE B10", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN013", nombre: "Admin Berritzegune G01", berritzegune: "BERRITZEGUNE G01", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN014", nombre: "Admin Berritzegune G02", berritzegune: "BERRITZEGUNE G02", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN015", nombre: "Admin Berritzegune G03", berritzegune: "BERRITZEGUNE G03", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN016", nombre: "Admin Berritzegune G04", berritzegune: "BERRITZEGUNE G04", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN017", nombre: "Admin Berritzegune G05", berritzegune: "BERRITZEGUNE G05", especialidad: "Admin", centros: [], tipo: "admin" },
+            { codigo: "ADMIN018", nombre: "Admin Berritzegune G06", berritzegune: "BERRITZEGUNE G06", especialidad: "Admin", centros: [], tipo: "admin" }
+];
+        const ZENTRO_LEHENETSIAK = [
+    { codigo: "010002", nombre: "CEIP Dulantzi HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010003", nombre: "CEIP Zabaleko HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010009", nombre: "CEIP Aramaixo Herri Eskola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010010", nombre: "CEIP Arteko Gure Ama HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010012", nombre: "CPI Ikasbidea Ikastola IPI", udalerria: "", zona: "ARABA" },
+    { codigo: "010013", nombre: "CEIP Araia Herri Eskola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010020", nombre: "CEIP Elciego HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010021", nombre: "CEIP Labastida HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010022", nombre: "CEIP Víctor Tapia HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010027", nombre: "CEIP Areta Herri Eskola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010035", nombre: "CEPA Laudio HHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010039", nombre: "CEIP Maestu HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010040", nombre: "EEI Okondo HE", udalerria: "", zona: "ARABA" },
+    { codigo: "010041", nombre: "CEIP Ramiro De Maeztu HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010042", nombre: "CEIP Unamunzaga HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010046", nombre: "IES Aniturri BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010048", nombre: "CEIP Izarra HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010049", nombre: "CEIP Gobea HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010051", nombre: "CEIP Abendaño Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010052", nombre: "CEIP Adurza Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010053", nombre: "CEIP Aranzabela Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010054", nombre: "CEIP Landazuri Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010071", nombre: "CEIP Luis Dorao HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010076", nombre: "CEIP Miguel De Cervantes HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010080", nombre: "CEIP Padre Orbiso HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010100", nombre: "CEIP Ramón Bajo HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010103", nombre: "CEIP San Martín HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010105", nombre: "CEIP Sta. María De Vitoria HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010108", nombre: "CIFP Agrario Arkaute/Arkaute Nekazaritza LHII", udalerria: "", zona: "ARABA" },
+    { codigo: "010117", nombre: "CEE Gorbeialde HBI", udalerria: "", zona: "ARABA" },
+    { codigo: "010123", nombre: "CEPA Paulo Freire HHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010131", nombre: "CPM Jesús Guridi MKP", udalerria: "", zona: "ARABA" },
+    { codigo: "010133", nombre: "IES Federico Baraibar BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010134", nombre: "IES Francisco De Vitoria BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010135", nombre: "IES Los Herrán BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010137", nombre: "CIFP Ciudad Jardín LHII", udalerria: "", zona: "ARABA" },
+    { codigo: "010138", nombre: "CIFP Mendizabala LHII", udalerria: "", zona: "ARABA" },
+    { codigo: "010140", nombre: "CEIP Odón De Apraiz Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010142", nombre: "CEIP Pedro Ignacio Barrutia Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010153", nombre: "CEIP Toki Eder Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010156", nombre: "CEIP Virgen De Oro HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010157", nombre: "IES Murgia BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010158", nombre: "CEIP José Miguel Barandiaran HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010160", nombre: "CPEIPS Aresketa Ikastola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010165", nombre: "CEIP Etxaurren Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010170", nombre: "CPEIP Bastida Ikastola HLHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010172", nombre: "CEIP Lantziego Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010173", nombre: "CPEIPS Assa Ikastola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010174", nombre: "CPEIPS Laudio Ikastola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010178", nombre: "CPEIPS San Bizente Ikastola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010179", nombre: "CEIP P. Lope De Larrea Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010185", nombre: "CEIP Abetxuko Ikastola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010188", nombre: "CPEIPS Olabide Ikastola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010192", nombre: "CEIP Arriagako Haritza Eskola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010195", nombre: "CPEIPS Amaurre HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010199", nombre: "CPEIPS La Milagrosa HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010201", nombre: "CIFP Laudioalde Lanbide Eskola LHII", udalerria: "", zona: "ARABA" },
+    { codigo: "010202", nombre: "CPEIPS Lautada Ikastola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010214", nombre: "CPFPB Bermar OLHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010216", nombre: "CPEIPS Calasanz HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010218", nombre: "CPEIPS Hogar San Jose HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010219", nombre: "CPEIPS Inmaculada Concepción HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010221", nombre: "CPEIPS Urkide HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010222", nombre: "CPEIPS Nazareth HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010223", nombre: "CPEIPS Niño Jesús HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010224", nombre: "CPEIPS Ntra. Sra. De Las Mercedes HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010228", nombre: "CPEIPS Presentación De María HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010229", nombre: "CPEIPS Carmelitas-Sagrado Corazón HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010231", nombre: "CEIP San Ignacio HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010233", nombre: "CPEIPS San Viator HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010234", nombre: "CPEIPS Santa María HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010235", nombre: "CPEIPS Sagrado Corazón HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010237", nombre: "CPEIPS Vera Cruz HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010239", nombre: "CPEIPS Ceu Virgen Niña HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010244", nombre: "CPEIPS Paula Montal HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010246", nombre: "EASD I D Arte ADGE", udalerria: "", zona: "ARABA" },
+    { codigo: "010248", nombre: "CPIFP Egibide LHIPI", udalerria: "", zona: "ARABA" },
+    { codigo: "010251", nombre: "CPEIPS Pedagógica San Prudencio S.C.L. HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010254", nombre: "CPES Apostolico San Jose BHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010256", nombre: "CIFP Hostelería LHII", udalerria: "", zona: "ARABA" },
+    { codigo: "010257", nombre: "IES Koldo Mitxelena BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010258", nombre: "IFP El Carmen LHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010266", nombre: "IES Miguel De Unamuno BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010288", nombre: "EOI Vitoria-Gasteiz HEO", udalerria: "", zona: "ARABA" },
+    { codigo: "010291", nombre: "CPFPB Adsis Gasteiz OLHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010296", nombre: "CIFP Construcción LHII", udalerria: "", zona: "ARABA" },
+    { codigo: "010311", nombre: "CPEIPS Armentia Ikastola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010316", nombre: "CEIP Garazi HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010317", nombre: "CEIP Latiorro HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010319", nombre: "IES Zaraobe BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010327", nombre: "CEIP Mendiko Eskola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010329", nombre: "IES Mendebaldea BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010330", nombre: "IES Ekialdea BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010332", nombre: "CEIP Antonio López De Guereñu-José Mardones HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010333", nombre: "CEIP Judimendi HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010335", nombre: "IES Badaia BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010338", nombre: "CEIP Lamuza HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010339", nombre: "CEIP Luis Elejalde-Rogelia De Álvaro HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010340", nombre: "CEIP Divino Maestro-María De Maeztu HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010342", nombre: "CEIP Ángel Ganivet-Santa Lucía HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010343", nombre: "CEIP Aranbizkarra Ikas Komunitatea HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010349", nombre: "IES Samaniego-Laguardia BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010350", nombre: "CEIP Gorbeia Eskola HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010351", nombre: "IES Laudio BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010450", nombre: "CEIP Ibaiondo HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010503", nombre: "CEIP Salburua HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010504", nombre: "CEIP Zabalgana HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010510", nombre: "CEIP Lakuabizkarra HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010512", nombre: "IES Lakua BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010513", nombre: "IES Zabalgana BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010514", nombre: "IES Salburua BHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010515", nombre: "CEIP Mariturri HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010540", nombre: "CPEIPS Geroa Waldorf Eskola HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010572", nombre: "CPI Sansomendi IPI", udalerria: "", zona: "ARABA" },
+    { codigo: "010604", nombre: "CPI Mendialdea IPI", udalerria: "", zona: "ARABA" },
+    { codigo: "010605", nombre: "CEIP Errekabarri HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010613", nombre: "CPI Samaniego IPI", udalerria: "", zona: "ARABA" },
+    { codigo: "010616", nombre: "CPEIPS Nclic School HLBHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010617", nombre: "CPI Aldaialde IPI", udalerria: "", zona: "ARABA" },
+    { codigo: "010618", nombre: " Instituto Vasco de Educación a Distancia (IVED) ", udalerria: "", zona: "ARABA" },
+    { codigo: "010663", nombre: "CPES Egibide-Jesús Obrero BHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010685", nombre: "CPEIP Argantzon Ikastola HLHIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010723", nombre: "CEIP Barrundia HLHI", udalerria: "", zona: "ARABA" },
+    { codigo: "010736", nombre: "CPE International School Vitoria AIP", udalerria: "", zona: "ARABA" },
+    { codigo: "010745", nombre: "CIFP Murgia LHII", udalerria: "", zona: "ARABA" },
+    { codigo: "012001", nombre: "CEIP Aduna HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012002", nombre: "CEIP Basakaitz HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012003", nombre: "CEIP Albiztur HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012004", nombre: "CEIP Alegiako Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012005", nombre: "CEIP Alkiza HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012007", nombre: "CEIP Zumadi HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012015", nombre: "CEIP Kurtzebarri HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012017", nombre: "CEIP Pello Errota HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012018", nombre: "CEIP Joxemiel Barandiaran Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012019", nombre: "CEIP Lardizabal HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012027", nombre: "CEIP Murumendi HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012031", nombre: "CEIP J.A. Muñagorri HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012032", nombre: "CEIP Berrobiko Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012033", nombre: "CEIP Txinkorta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012034", nombre: "CEIP Aitxuri HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012035", nombre: "CEIP Zerain HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012037", nombre: "CEIP Zestoa HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012038", nombre: "CEIP Arroa HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012040", nombre: "CIFP Fraisoro Eskola LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012041", nombre: "CEIP Pedro M. Otaño HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012042", nombre: "CEIP Mendigain HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012046", nombre: "CEIP Amaña HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012053", nombre: "CIFP Uni Eibar-Ermua LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012054", nombre: "CIFP Armeria Eskola LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012065", nombre: "CEIP Luis Ezeiza HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012071", nombre: "IES Talaia BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012072", nombre: "CEIP Balentzategi HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012073", nombre: "CEIP Iturzaeta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012086", nombre: "CEIP Txirrita HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012089", nombre: "CEIP Aita Iparragirre HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012090", nombre: "CEIP Ikaztegieta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012102", nombre: "CEIP Elatzeta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012108", nombre: "CIFP Plaiaundi LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012110", nombre: "CEIP Toki-Alai HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012113", nombre: "CEIP Urkipe Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012115", nombre: "CEIP Olamendi HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012117", nombre: "IES Olamendi BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012119", nombre: "CEIP Ugaro HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012123", nombre: "CEIP Lizartzako Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012133", nombre: "CEIP Olaberriko Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012134", nombre: "CEIP Urgain Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012137", nombre: "CPI Juan Zaragueta Herri Eskola IPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012139", nombre: "CEIP San Andrés HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012140", nombre: "CEIP Elizalde HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012150", nombre: "CPI Karmengo Ama-Virgen Del Carmen IPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012151", nombre: "CIFP Blas De Lezo LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012153", nombre: "CEIP San Martín HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012159", nombre: "CEIP Cristóbal Gamón HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012168", nombre: "CEPA Oarsoaldea HHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012173", nombre: "IES Koldo Mitxelena BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012184", nombre: "CEIP Amara-Berri HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012186", nombre: "CEIP Katalin Erauso HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012202", nombre: "CEIP Zuhaizti HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012219", nombre: "CEIP Zubieta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012224", nombre: "IES Altza BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012242", nombre: "CEIP Laiotz HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012244", nombre: "CEIP Félix Samaniego HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012261", nombre: "CEIP Aginaga HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012273", nombre: "CEIP Angiozar HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012277", nombre: "CEIP Fleming Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012279", nombre: "CEIP Fray A. Urdaneta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012282", nombre: "IES Oianguren BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012284", nombre: "CEIP Gain-Zuri HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012286", nombre: "IES J.M. Iparragirre BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012287", nombre: "CEIP Lardizabal HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012288", nombre: "CEIP Orokieta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012291", nombre: "CIFP Irudika LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012292", nombre: "IES Lizardi BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012309", nombre: "CPEIPS Aita Larramendi Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012310", nombre: "CPEIPS Anoetako Herri Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012320", nombre: "CEIP Izarraizpe Ikastola Publikoa HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012327", nombre: "CEIP J.A. Mogel Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012328", nombre: "CPEIPS Elgoibar Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012330", nombre: "CPEI José Arana Ikastola HHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012334", nombre: "CEIP Langile Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012336", nombre: "CPEIPS Uzturpe Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012338", nombre: "CEIP Txingudi-Irungo Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012339", nombre: "CPEIP Irura Ikastola HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012341", nombre: "CPEIPS San Benito Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012342", nombre: "CPEIPS Haztegi Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012345", nombre: "CPEIPS San Frantzisko Xabier HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012346", nombre: "CPEIPS Gaztelupe-Arimazubi Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012347", nombre: "CPEI Ume-Zaintza Ikastola HHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012349", nombre: "CPEIPS Txantxiku Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012350", nombre: "CPEIPS Orio Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012352", nombre: "CPEIPS Haurtzaro Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012353", nombre: "CPEIPS Pasaia-Lezo Lizeoa HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012357", nombre: "CPEIPS Orereta HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012358", nombre: "CEIP Aitor Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012361", nombre: "CPEIPS Axular Lizeoa HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012363", nombre: "CPEIPS Ekintza HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012366", nombre: "CEIP Ikas-Bide Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012367", nombre: "CEIP Intxaurrondo Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012372", nombre: "CPEIPS Zurriola Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012375", nombre: "CPEIPS Usabalgo Laskorain Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012378", nombre: "CPEIPS Udarregi HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012380", nombre: "CPEIPS Mariaren Lagundia Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012381", nombre: "CPEIPS Zubimusu Ikastola-Villabona HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012382", nombre: "CPEIPS Jakintza Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012384", nombre: "CPEIPS Urretxu-Zumarraga Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012386", nombre: "CPEIPS Salbatore Mitxelena HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012389", nombre: "CEIP Mendaro Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012394", nombre: "CPES Esc. Cine Y Vídeo-Zine Eta Bideo Eskola BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012395", nombre: "CPEI Basabeazpi Ikastola HHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012399", nombre: "CPEIPS San Jose De Floreaga HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012409", nombre: "CPEE Aspace HBIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012411", nombre: "CPEIPS La Salle-San Jose HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012416", nombre: "CPES Ntra. Sra. De Azitain BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012418", nombre: "CPEIP La Salle-Isasi HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012419", nombre: "CPEIPS Sta. María De La Providencia HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012428", nombre: "CPEIPS Ama Guadalupekoa HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012430", nombre: "CPEIPS Egiluze Hijas De La Cruz Hondarribia HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012432", nombre: "CPEIPS Aratz Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012438", nombre: "CPEIPS El Pilar-Cia. De María HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012439", nombre: "CPES Erain BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012444", nombre: "CPEIPS San Vicente De Paul HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012447", nombre: "CPEI Erain-Txiki HHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012458", nombre: "CPEIP San Miguel Arcángel HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012464", nombre: "EIPR Madre Pilar Izquierdo HEPR", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012468", nombre: "CIFP Don Bosco LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012471", nombre: "CPEIPS Egiluze Hijas De La Cruz Errenteria HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012473", nombre: "CPEIPS Sagrado Corazón HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012479", nombre: "CPIFP Centro De Estudios A.E.G. LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012485", nombre: "CPES Seim BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012490", nombre: "CPIFP Nazaret Lanbide Heziketa LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012492", nombre: "CPEE Aransgi HBIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012494", nombre: "CPEE Aspace HBIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012495", nombre: "CPEE Azcarate Enea HBIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012504", nombre: "CPEIPS Mary Ward HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012505", nombre: "CPEIPS Aldapeta Maria HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012507", nombre: "CPEIPS Eskibel HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012512", nombre: "CPEIPS La Anunciata HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012513", nombre: "CPEIPS La Asunción HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012516", nombre: "CPEIPS Salesianos Donostia HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012518", nombre: "CPES Manuel De Larramendi BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012519", nombre: "CPEIPS María Reina Eskola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012525", nombre: "CPEIPS Ntra. Sra. De Aránzazu HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012529", nombre: "CPES Ortzadar BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012532", nombre: "CPEIPS Presentación De María HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012537", nombre: "CPEIPS San Ignacio De Loyola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012540", nombre: "CPEIP San José (Escuela Asilo) HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012544", nombre: "CPES Elizaran Lanbide Heziketa BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012545", nombre: "CPEIPS San Patricio HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012547", nombre: "CPEIPS Elaienea HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012549", nombre: "CPEIPS Sagrado Corazón HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012550", nombre: "CPEIPS Inglés HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012565", nombre: "CPES Herrikide Eskolapioak BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012566", nombre: "CPIFP Tolosako Inmakulada Lanbide Ikastola LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012568", nombre: "CPEIP Herrikide Jesuitinak HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012571", nombre: "CPEIP Magale Presentación De María HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012572", nombre: "CPIFP Salesianos Urnieta LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012581", nombre: "CPIFP Goierri LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012585", nombre: "CPEIPS Antoniano Ikastetxea HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012586", nombre: "CPEIPS La Salle-San José HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012592", nombre: "CPEIPS La Salle-Legazpi HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012593", nombre: "CPIFP Urola Garaiko Lanbide Eskola LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012634", nombre: "CEPA Eibar HHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012637", nombre: "CEPA Bidasoaldea HHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012653", nombre: "CEIP Urumea Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012654", nombre: "CEIP Elizatxo Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012675", nombre: "IMFPB Andoain OLHUI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012677", nombre: "IMFPB Eibar OLHUI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012680", nombre: "IMFPB Pasaia OLHUI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012722", nombre: "EOI Donostia-San Sebastián HEO", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012726", nombre: "IMFPB Urola Kostako Mankomunitatea OLHUI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012727", nombre: "CPFPB Deikagest Errenteria OLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012729", nombre: "IMFPB Usurbil OLHUI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012733", nombre: "CEPA Goierri HHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012740", nombre: "IES Leizaran BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012742", nombre: "CPIFP Irungo La Salle LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012746", nombre: "CPIFP La Salle-Berrozpe LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012756", nombre: "CPES C. Estud. De Pelu. Y Est. Beta BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012777", nombre: "CEIP Elgoibar HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012779", nombre: "CEIP Ondarreta Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012905", nombre: "CEIP Koldo Mitxelena HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012940", nombre: "CPFPB Sustaker OLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012945", nombre: "IES Kurtzebarri BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012946", nombre: "IES Soraluze BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012951", nombre: "IES Aralar BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012952", nombre: "IES Erniobea BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012957", nombre: "IES Egape Ikastola BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012958", nombre: "IES Lauaizeta Ikastola BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012960", nombre: "IES Arantzazuko Ama BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012962", nombre: "IES Lezo BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012963", nombre: "IES Elizalde BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012964", nombre: "IES Bizarain BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012965", nombre: "IES Cristóbal Gamón BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012966", nombre: "IES Toki Alai BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012967", nombre: "IES Hirubide BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012968", nombre: "IES Txingudi BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012969", nombre: "IES Eguzkitza BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012970", nombre: "CEIP Plaentxi HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012973", nombre: "CEIP P. Garaikoetxea-Landaberri Ik. HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012974", nombre: "CEIP Sasoeta-Zumaburu HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012975", nombre: "CEIP Egape Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012976", nombre: "CEIP Talaia HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012977", nombre: "CEIP Leka Enea-Anaka HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012979", nombre: "CEIP Lezo HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012980", nombre: "IES Orixe BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012982", nombre: "IES Xabier Zubiri-Manteo BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012985", nombre: "IES Azkoitia BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012988", nombre: "CPEI Zubimusu Ikastola-Zizurkil HHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012991", nombre: "CPEIPS Elkar Hezi HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "012996", nombre: "CPEIPS Beasain Ikastola HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013002", nombre: "CEIP Belaskoenea HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013006", nombre: "IES Arrasate BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013012", nombre: "IES Hernani BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013013", nombre: "IES Pío Baroja BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013015", nombre: "IES Oñati BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013020", nombre: "CIFP Miguel Altuna LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013021", nombre: "CIFP Bidasoa LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013022", nombre: "CIFP Usurbil LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013023", nombre: "CIFP Tolosaldea LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013025", nombre: "IES Usandizaga-Peñaflorida-Amara BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013026", nombre: "CEIP Alkartasuna Lizeoa HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013028", nombre: "EOI Irun HEO", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013070", nombre: "CPES Escuela De Hostelería Aiala BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013078", nombre: "CEIP Imaz Bertsolaria HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013079", nombre: "CEIP Hegoa HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013085", nombre: "IES Antigua-Luberri BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013138", nombre: "CEIP Dunboa HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013169", nombre: "CEIP Arrasate Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013200", nombre: "EIPR Orereta Ttiki HEPR", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013232", nombre: "EIMU Partzuergoa UHE", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013253", nombre: "CEIP Harri Berri-Oleta HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013254", nombre: "CEIP Txalburu HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013255", nombre: "CIFP Aretxabaleta Lanbide Eskola LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013372", nombre: "CEIP Eguzkitza HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013379", nombre: "CPES Oiartzo Batxilergo Ikastola BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013380", nombre: "CPIFP Oteitza Lizeo Politeknikoa LHIPI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013386", nombre: "EIC Errenteriako Haurreskola-Uztargi PHE", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013431", nombre: "IES Elgoibar BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013437", nombre: "CPES Cesa BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013440", nombre: "EIC Astigarragako Haurreskola-Kiriketa PHE", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013443", nombre: "EIC Errenteriako Haurreskola-Goialde PHE", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013451", nombre: "CEIP Aiete HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013461", nombre: "IES Beasain BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013500", nombre: "CPES Centro Formación Mendibil Formazio Zent. BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013506", nombre: "CPEIP Pasaia-Lezo Lizeoa HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013520", nombre: "CEIP Arantzazuko Ama Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013521", nombre: "CEIP Astigarragako Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013522", nombre: "CEIP Bizarain Ikastola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013527", nombre: "CEIP Ezkio-Itsaso Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013532", nombre: "CIFP De Desarrollo Sostenible En Edificación Inteligente LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013533", nombre: "CIFP Kardala LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013541", nombre: "CPES Goierri Eskolako Batxilergoa BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013542", nombre: "CPFPB Gureak OLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013554", nombre: "IES Oriarte BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013555", nombre: "IES Izarraizpe Ikastola Publikoa BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013556", nombre: "CIFP Izarraitz Lanbide Heziketa LHII", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013579", nombre: "CPES Ugle-Batxilergoa BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013580", nombre: "CPES Nazaret Batxilergoa BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013583", nombre: "CPEIPS La Salle Berrozpe Ikastetxea HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013584", nombre: "CPES Magale Salestarrak BHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013586", nombre: "CPEIPS Irungo La Salle HLBHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013597", nombre: "IES Eibar BHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013624", nombre: "CEPA Donostia HHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013635", nombre: "CPEIP Bizilore HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013641", nombre: "CPEIP Liceo Vasco-Francés Larrun HLHIP", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "013667", nombre: "CEIP Larraulgo Herri Eskola HLHI", udalerria: "", zona: "GIPUZKOA" },
+    { codigo: "014002", nombre: "CEIP Traña Matiena HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014003", nombre: "CEIP Zelaieta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014004", nombre: "CEIP Buenos Aires HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014005", nombre: "CEIP El Casal HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014006", nombre: "CEIP Mtro. Askartza Isusi HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014010", nombre: "IES Dolores Ibarruri BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014021", nombre: "CEIP Amoroto HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014025", nombre: "CEIP Munitibar HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014026", nombre: "CEIP Ángel Larena HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014027", nombre: "CEIP Arrankudiaga HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014029", nombre: "CEIP Arrigorriaga HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014034", nombre: "CEIP Urkitza HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014038", nombre: "CEIP Arteagabeitia HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014046", nombre: "CEIP Juan Ramón Jiménez HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014048", nombre: "CEIP Larrea HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014049", nombre: "CEIP Gurutzeta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014050", nombre: "CEIP Mukusuluba HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014051", nombre: "CEIP Munoa HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014053", nombre: "CEIP Ntra. Sra. Del Pilar HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014055", nombre: "CEIP Arrontegi Eskola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014057", nombre: "CEIP Zuazo HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014064", nombre: "IES Antonio Trueba BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014065", nombre: "IES Cruces BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014066", nombre: "IES Beurko BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014067", nombre: "CEIP Ibaibe HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014068", nombre: "IES Minas BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014069", nombre: "CIFP Barakaldo LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014073", nombre: "CEIP José Etxegarai HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014074", nombre: "CEIP Kareaga-Goikoa HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014080", nombre: "CEIP Sofía Taramona HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014083", nombre: "CEPA Basauri Denon Eskola HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014086", nombre: "IES Urbi BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014087", nombre: "IES Uribarri BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014088", nombre: "CIFP Bidebieta LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014090", nombre: "CEIP Berango-Merana HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014096", nombre: "CEIP Berriatua HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014097", nombre: "CEIP Learreta-Markina HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014108", nombre: "CEIP Basurto HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014109", nombre: "CEIP Birjinetxe HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014111", nombre: "CEIP Cervantes HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014114", nombre: "CEIP Deusto HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014117", nombre: "CEIP Indautxuko Eskola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014119", nombre: "CEIP Gabriel Aresti HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014123", nombre: "CEIP Ing. Jose Orbegozo Gorostidi HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014124", nombre: "CEIP Juan M. Sánchez Marcos HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014129", nombre: "CEIP Arangoiti HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014130", nombre: "CEIP Maestra Isabel Gallego Gorria HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014131", nombre: "CEIP Maestro Garcia Rivero HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014137", nombre: "CEIP Pío Baroja HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014140", nombre: "CPI Pagasarribide IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014149", nombre: "CEIP Sra. Vda. De Epalza HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014150", nombre: "CEIP Tomás Camacho HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014151", nombre: "CEIP Txurdinaga HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014153", nombre: "CEIP Uribarri HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014157", nombre: "CEIP Zamakola-Juan Delmas HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014159", nombre: "CEIP Zorrotza Fray Juan HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014160", nombre: "CEIP Zurbaran HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014161", nombre: "CEIP Zurbaranbarri HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014186", nombre: "IES Botikazar BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014187", nombre: "IES Martín De Bertendona BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014188", nombre: "IES Gabriel Aresti BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014189", nombre: "IES Miguel De Unamuno BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014190", nombre: "IES Txurdinaga Behekoa BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014191", nombre: "IES Rekaldeberri BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014192", nombre: "IES San Adrian BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014200", nombre: "IES Eskurtze BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014230", nombre: "CEIP Jose M. Ucelay HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014232", nombre: "CEIP Concha HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014235", nombre: "CEIP Arratia HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014236", nombre: "CEIP Zeanuri HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014237", nombre: "CEIP Zubialde HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014238", nombre: "CEIP Dima-Ugarana HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014242", nombre: "CEIP Landako Eskola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014256", nombre: "CEIP Manuela Zubizarreta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014258", nombre: "CEIP Elorrio HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014260", nombre: "CEIP San Lorenzo HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014268", nombre: "CEIP Aperribai HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014275", nombre: "CEPA Galdakao HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014278", nombre: "IES Elexalde BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014279", nombre: "CIFP Andra Mari LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014280", nombre: "CEIP Unkina HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014283", nombre: "CEIP Gatika HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014284", nombre: "CEIP Montorre HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014285", nombre: "CEIP Eduardo Eskartzaga HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014287", nombre: "CEIP Gorliz HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014288", nombre: "CEIP Andra Mari HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014290", nombre: "CEIP Juan Bautista Zabala HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014291", nombre: "CEIP Larrañazubi HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014294", nombre: "CEIP San Ignacio HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014296", nombre: "CEIP Zubileta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014299", nombre: "IES Julio Caro Baroja BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014301", nombre: "CIFP Fadura LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014308", nombre: "CEIP Allende Salazar HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014320", nombre: "IES Gernika BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014324", nombre: "CEIP Ispaster HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014327", nombre: "CEIP Larrabetzu HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014331", nombre: "CEIP Artatza Pinueta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014332", nombre: "CEIP Lamiako HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014335", nombre: "CEIP San Bartolomé HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014336", nombre: "CEIP Txomin Aresti HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014337", nombre: "CEPA Leioa HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014339", nombre: "IES Jose Miguel Barandiaran BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014340", nombre: "CIFP Escuela De Hostelería LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014341", nombre: "CPI Juan B. Eguzkitza Meabe IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014350", nombre: "CEIP Learreta-Markina HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014352", nombre: "CEIP Bekobenta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014356", nombre: "CEIP Urretxindorra HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014361", nombre: "CEIP Mundaka HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014363", nombre: "CEIP Laukariz HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014367", nombre: "CEIP Legarda HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014369", nombre: "CEIP Urregarai HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014370", nombre: "CEIP Cantarrana Eskola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014372", nombre: "CEIP Otxandio HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014378", nombre: "CEIP Zaldupe HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014379", nombre: "CEIP Urduña HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014382", nombre: "CEIP Orozko Harana HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014384", nombre: "CEIP Plentzia HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014390", nombre: "CEIP Gabriel Celaya HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014391", nombre: "CEIP Kanpazar HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014392", nombre: "CEIP Maestro Zubeldia HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014395", nombre: "CEIP Ruperto Medina HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014396", nombre: "CEIP Virgen De La Guía HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014397", nombre: "CEPA Portugalete HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014398", nombre: "IES Juan Antonio Zunzunegui BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014400", nombre: "CEIP La Arboleda HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014401", nombre: "CEIP La Escontrilla HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014402", nombre: "CEIP San Gabriel HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014407", nombre: "CEIP Lezama HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014413", nombre: "CEIP Las Viñas HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014417", nombre: "CEIP Serantes HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014418", nombre: "CEIP Itsasoko Ama HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014419", nombre: "CEPA Santurtzi HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014422", nombre: "CIFP Santurtzi LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014426", nombre: "CEIP Otxartaga HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014430", nombre: "CEIP Albiz HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014432", nombre: "CEIP Kueto HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014437", nombre: "CEIP Vista Alegre HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014438", nombre: "CEPA Sestao HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014440", nombre: "IES Ángela Figuera BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014441", nombre: "IES Saturnino De La Peña BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014445", nombre: "EEI La Baluga HE", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014447", nombre: "CEIP Turtziozko Eskola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014448", nombre: "CEIP Elortza HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014449", nombre: "CEIP Mendia HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014451", nombre: "IES Balmaseda BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014452", nombre: "CEIP Atxondo HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014454", nombre: "CEIP Areatza HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014455", nombre: "CEIP Ignacio Zubizarreta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014456", nombre: "IES Arratia BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014457", nombre: "CEIP Zaldibar HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014459", nombre: "CEIP Mimetiz HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014464", nombre: "CEIP Derio HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014466", nombre: "IES Txorierri BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014470", nombre: "CEIP Goiko-Landa HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014471", nombre: "CEIP Ignacio Aldekoa HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014486", nombre: "CEIP Gorondagane HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014489", nombre: "CEIP Zamudio HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014492", nombre: "CEIP Etorkizuna Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014493", nombre: "CPEIPS Andra Mari Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014494", nombre: "CPEIPS Lauaxeta Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014495", nombre: "CPEIPS Abusu Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014499", nombre: "CEIP Alkartu Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014500", nombre: "CEIP Arizko Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014502", nombre: "CPEIPS Eleizalde Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014505", nombre: "CPEIPS Artxandape Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014507", nombre: "CPEIPS Begoñazpi Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014508", nombre: "CPI Deustuko Ikastola IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014509", nombre: "CEIP Intxixu Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014510", nombre: "CPI Karmelo Ikastola IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014512", nombre: "CPEIPS Kirikiño Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014516", nombre: "CPEIPS Urretxindorra Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014518", nombre: "CPEIPS Kurutziaga Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014520", nombre: "CEIP Anaitasuna Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014521", nombre: "CPEIPS Eguzkibegi Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014523", nombre: "CEIP Geroa Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014524", nombre: "CPEIPS San Nikolas Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014526", nombre: "CPEIPS San Fidel Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014527", nombre: "CPEIPS Seber Altube Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014528", nombre: "CEIP Altzaga Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014529", nombre: "CEIP Gobela Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014530", nombre: "CPEIPS Resurrección M. De Azkue Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014531", nombre: "CPEIPS Bera-Kruz Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014537", nombre: "CPEIPS Larramendi Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014539", nombre: "CEIP Muskizko Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014543", nombre: "CPEIPS Zubi-Zahar Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014544", nombre: "CPEIPS Asti-Leku Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014549", nombre: "CPEIPS Itxaropena Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014550", nombre: "CPEIPS Bihotz Gaztea Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014553", nombre: "CPEIPS Ander Deuna Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014554", nombre: "CPEIPS Zubi-Zaharra Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014560", nombre: "CEIP Altzaga Ikastola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014561", nombre: "CPEIPS Lauro Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014566", nombre: "CPEIPS El Carmelo HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014567", nombre: "CPEIPS Karmengo Ama HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014575", nombre: "CPEIPS El Regato HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014578", nombre: "CPEIPS La Inmaculada M.S.J.O. HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014582", nombre: "CPEIPS Ntra. Sra. De Begoña HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014583", nombre: "CPEIPS Ntra. Sra. Del Rosario HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014586", nombre: "CPEIPS San Juan Bosco HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014587", nombre: "CPEIPS Salesianos Barakaldo HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014588", nombre: "CPEIPS San Vicente De Paul HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014595", nombre: "CPEIPS Cooperativa Basauri HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014597", nombre: "CPEIPS San Jose HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014598", nombre: "CPEI Sta. María De La Providencia HHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014599", nombre: "CPE The American School Of Bilbao AIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014601", nombre: "CIFP Náutico Pesquera De Bermeo LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014602", nombre: "CPEIPS Sagrado Corazón HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014613", nombre: "CPE Colegio Alemán De Bilbao AIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014618", nombre: "CPEIPS Amor Misericordioso HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014619", nombre: "CPEIPS Ángeles Custodios HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014621", nombre: "CPES Arce BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014629", nombre: "CPEIPS Berrio-Otxoa HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014630", nombre: "CPEIPS Calasancio HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014634", nombre: "CPIFP Jesuitak Politeknikoa LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014635", nombre: "CPES Sopeña-Bilbao BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014637", nombre: "CPEIPS El Ave María HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014639", nombre: "CPEIPS Maristak Bilbao HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014641", nombre: "CPEIPS Esclavas Sc-Fátima HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014643", nombre: "CPES Fernando BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014647", nombre: "CPEIPS Hijas De La Caridad-N. Sra De Begoña HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014648", nombre: "CPES Hermanos Larrinaga S.L. BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014651", nombre: "CPEIPS Ikasbide HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014653", nombre: "CPEI Iparragirre Ikastola HHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014655", nombre: "CPEIPS Jesús María HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014658", nombre: "CPEIPS La Salle Bilbao HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014663", nombre: "CPEIPS Madre De Dios HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014664", nombre: "CPIFP Salesianos Deusto-M. Aux.-San. J. Bosco LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014665", nombre: "CPES María Inmaculada BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014676", nombre: "CPEPS Jesuitak Indautxu LBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014677", nombre: "CPEIPS Ntra. Sra. Del Carmen HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014680", nombre: "CPIFP Innovación Social Diego Berguices-Otxarkoaga LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014685", nombre: "CPEIPS Pureza De María HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014689", nombre: "CPEIPS Sagrado Corazón HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014696", nombre: "CPES San Luis Lanbide Heziketa BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014698", nombre: "CPEIPS Scientia San Pedro HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014704", nombre: "CPES Sta. María De Artagan BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014709", nombre: "CPEIPS Trueba De Artxanda HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014718", nombre: "CPIFP Zabalburu LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014723", nombre: "CPIFP Arratiako Zulaibar Lanbide Ikastegia LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014726", nombre: "CPEIPS Nevers Ikastetxea HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014727", nombre: "CPEIPS San Antonio Ikastetxea HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014728", nombre: "CPIFP Maristak Durango LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014729", nombre: "CPEIPS San Jose-Jesuitak HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014731", nombre: "CPEI Maria Bitarteko HHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014732", nombre: "CPEPS Lourdesko Ama LBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014733", nombre: "CPEIP Eskolabarri HLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014737", nombre: "CPEIPS San Pelayo HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014742", nombre: "CPEIPS Azkorri HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014747", nombre: "CPES Ibaiondo Lanbide Ikastegia S.L. BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014750", nombre: "CPEIPS Madre Del Divino Pastor HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014751", nombre: "CPEIPS Sei Europa HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014754", nombre: "CPEIPS Santisima Trinidad HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014761", nombre: "CPEIPS Avellaneda HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014765", nombre: "CPEIPS Sta. María Del Socorro HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014766", nombre: "CPEIPS Claret Askartza HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014767", nombre: "CPEIPS B.V. María HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014768", nombre: "CPEIP Gaztelueta HLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014769", nombre: "CPEIPS Ntra. Sra. De Las Mercedes HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014775", nombre: "CPIFP Lea-Artibai LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014777", nombre: "CPEIPS Fundación Escuelas Ventades HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014778", nombre: "CPEIP San Juan Ikastetxea HLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014779", nombre: "CPIFP Somorrostro LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014786", nombre: "CPEIPS Ntra. Sra. De La Antigua HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014792", nombre: "CPEIPS Karmengo Ama HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014796", nombre: "CPEIPS Sta. María HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014797", nombre: "CPES Xabier BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014799", nombre: "CPEE Elguero HBIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014800", nombre: "CPEIPS Franciscanas De Montpellier HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014808", nombre: "CPEIPS San Francisco Javier HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014809", nombre: "CPEIPS San Jose HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014810", nombre: "CPIFP Calasanz Lanbide Ikastegia LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014811", nombre: "CPEIPS Sta. Eulalia HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014816", nombre: "CPEIPS San Felix Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014817", nombre: "CPEIPS Amor Misericordioso HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014820", nombre: "CPEIPS Begoñako Andra Mari HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014824", nombre: "CPIFP San Viator LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014828", nombre: "CPEIPS Maristak Zalla HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014830", nombre: "CPEE Asbibe HBIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014833", nombre: "CPEIPS Ntra. Sra. De La Merced HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014837", nombre: "CPIFP Txorierri S.Coop.Ltda. LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014838", nombre: "CPEIPS Jado HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014844", nombre: "CPEIPS Ayalde HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014847", nombre: "CPEE Zabaloetxe Goikoa HBIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014848", nombre: "CPEPS Munabe LBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014849", nombre: "CPEIPS Padre Andrés Urdaneta HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014854", nombre: "CPEIPS Vizcaya HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014865", nombre: "EOI Getxo HEO", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014867", nombre: "CEIP Laukizko Lauaxeta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014890", nombre: "IMFPB Bituritxa-Barakaldo OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014891", nombre: "IMFPB Basauri OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014894", nombre: "IMFPB Durango OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014895", nombre: "CPFPB Adsis Leioa OLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014899", nombre: "IMFPB Portugalete OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014900", nombre: "CPFPB Meatzaldea OLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014901", nombre: "IMFPB Erandio OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014918", nombre: "CEPA Iturribide HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014920", nombre: "CEIP Amorebieta-Larrea HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014922", nombre: "CEIP Basozelai-Gaztelu HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014923", nombre: "CEIP Bermeoko Herri Eskola HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014925", nombre: "CEIP Lekeitio HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014926", nombre: "CEIP Maestra Emilia Zuza Brun HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014928", nombre: "IES Ballonti BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014938", nombre: "CEIP Maiztegi HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014945", nombre: "CIFP Construcción Bizkaia LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014949", nombre: "CIFP Agrario Derio/Derio Nekazaritza LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014950", nombre: "CIFP Iurreta LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014951", nombre: "CPEIPS Alazne HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014958", nombre: "CEPA Valle De Trápaga HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014960", nombre: "IMFPB Bermeo OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014974", nombre: "IMFPB Ermua-Mallabia OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014975", nombre: "IMFPB Santurtzi OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014976", nombre: "IMFPB Sestao OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014978", nombre: "IMFPB Gernika-Lumo OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014986", nombre: "CEPA Zalla HHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "014990", nombre: "EMPU Bartolome Ertzilla MEPU", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015006", nombre: "CEIP Alonsotegi HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015009", nombre: "EMPR Garamendi-tar Agustin MEPR", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015014", nombre: "CEIP Bizkotxalde HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015015", nombre: "CEIP Romo HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015020", nombre: "CEIP Barrutia HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015021", nombre: "IES Barrutialde BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015049", nombre: "EMPR Alboka MEPR", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015053", nombre: "CEIP Gandasegi HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015055", nombre: "CEIP Zazpilanda HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015064", nombre: "CPEIPS Betiko Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015069", nombre: "CPIFP Peñascal LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015071", nombre: "IES Abadiño BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015072", nombre: "IES Arrigorriaga BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015073", nombre: "IES Berriz BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015074", nombre: "IES Ibaizabal BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015075", nombre: "IES Luis Briñas-Santutxu BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015077", nombre: "IES Solokoetxe BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015078", nombre: "IES Zorrotza BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015080", nombre: "IES Carranza BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015082", nombre: "IES Elorrio BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015083", nombre: "IES Astrabudua BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015084", nombre: "IES Erandio BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015087", nombre: "IES Etxebarri BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015088", nombre: "IES Bengoetxe BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015090", nombre: "IES Juan Orobiogoitia BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015091", nombre: "IES Markina BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015092", nombre: "IES Muskiz BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015093", nombre: "IES Ortuella BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015094", nombre: "IES Sopela BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015095", nombre: "IES Zalla BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015096", nombre: "CEIP Bagatza HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015099", nombre: "CEIP Mujika HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015100", nombre: "CEIP Ongarai HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015101", nombre: "CEIP Urreta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015104", nombre: "CEIP Zipiriñe HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015105", nombre: "CPI Ugao IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015106", nombre: "IES Bermeo BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015108", nombre: "IES Mungia BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015109", nombre: "IES Aixerrota BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015111", nombre: "IES Artaza-Romo BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015112", nombre: "CIFP Elorrieta-Erreka Mari LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015143", nombre: "IES Uribe-Kosta BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015176", nombre: "CIFP Hostelería LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015178", nombre: "IES Burdinibarra BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015188", nombre: "IES Ibarrekolanda BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015189", nombre: "CPEIPS Elorrioko Txintxirri Ikastola HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015191", nombre: "IES San Inazio BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015218", nombre: "CPES Juritecnia BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015220", nombre: "CPES Ibaizabal Koop. E. Ikastola BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015226", nombre: "CPFPB Margotu OLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015240", nombre: "IMFPB Mungia OLHUI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015245", nombre: "CEIP Zaratamo HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015305", nombre: "CPIFP Harrobia LHIPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015307", nombre: "IES Durango BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015325", nombre: "CPES Escuela Superior De Hostelería Bilbao BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015336", nombre: "CEIP Lemoiz HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015342", nombre: "CEIP Zabalarra HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015360", nombre: "CEIP Miribilla HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015361", nombre: "CEIP Iruarteta HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015370", nombre: "EIC Abadiñoko Haurreskola-Traña Matiena PHE", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015371", nombre: "EIC Abadiñoko Haurreskola-Zelaieta PHE", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015376", nombre: "EIC Elorrioko Haurreskola PHE", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015385", nombre: "CPES Bagabiltza BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015463", nombre: "EIC Ermuko Haurreskola PHE", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015477", nombre: "CAAPD Argi Arte APDIB", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015516", nombre: "CEIP Markonzaga HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015579", nombre: "EIC Mallabiako Haurreskola-Intxaurti PHE", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015587", nombre: "EMPU Escuela De Música Publica Zubiaur MEPU", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015623", nombre: "IES Ondarroa BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015624", nombre: "IES Lekeitio BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015625", nombre: "IES Kantauri BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015626", nombre: "IES Axular BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015627", nombre: "IES Urritxe BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015628", nombre: "CIFP Zornotza LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015629", nombre: "IES Ategorri BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015630", nombre: "CIFP Tartanga LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015639", nombre: "EOI Zalla HEO", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015647", nombre: "EOI Santurtzi HEO", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015666", nombre: "CIFP Repelega LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015667", nombre: "CPED Kirolene KIIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015683", nombre: "CPI Antonio Trueba IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015723", nombre: "CPI Soloarte IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015724", nombre: "IES Ignacio Ellacuría-Zurbaran BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015725", nombre: "CEIP Kukullaga HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015757", nombre: "CPI Eretza Berri IPI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015762", nombre: "CAED Harrobia KIIB", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015763", nombre: "CIFP Txurdinaga LHII", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015765", nombre: "CEIP Haizeder HLHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015774", nombre: "CPES Grupo Hospitalario Quirón BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015775", nombre: "CAED Escuelas Ceneted KIIB", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015779", nombre: "IES Ermua BHI", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015793", nombre: "CPFPB Adsis Getxo OLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015794", nombre: "CPFPB Peñascal Markina OLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015806", nombre: "CPEIP Landabaso Eskola Aktiboa HLHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015809", nombre: "EIPR Colourful HEPR", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015830", nombre: "CPES Maristak Durango Batxilergoa BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015831", nombre: "CPES Politeknika Ikastegia Txorierri S. Coop. BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015832", nombre: "CPES Zabalburu Ikastetxea BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015833", nombre: "CPES Otxarkoaga BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015838", nombre: "CPES Lea-Artibai Batxilergoa BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015845", nombre: "CPEIPS Salesianos Deusto HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015846", nombre: "CPEPA Peñascal Milani HEHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015852", nombre: "CPE St. George´S British International School AIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015854", nombre: "CPES Centro De Formacion Somorrostro BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015870", nombre: "CPEIPS Centro San Viator HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015871", nombre: "CPEIPS Calasanz Santurtzi HLBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015878", nombre: "CPEP Umerri Eskola Aktiboa LHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015892", nombre: "CPEPS Osotu Lanbarri LBHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015932", nombre: "CPES San Luis Batxilergoa BHIP", udalerria: "", zona: "BIZKAIA" },
+    { codigo: "015941", nombre: "CPES Global School BHIP", udalerria: "", zona: "BIZKAIA" }
+];
+        const datosAholkulariak = (window.DATOS_AHOLKULARIAK || AHOLKULARI_LEHENETSIAK);
+
+        const datosCentros = (window.DATOS_CENTROS || ZENTRO_LEHENETSIAK);
+
+        const datosEginkizunak = {
+            "Inklusioa": [
+                "Ebaluazio psikopedagogiko berria",
+                "Berriztu egin behar den ebaluazio psikopedagogikoa",
+                "Txosten psikopedagogikoa",
+                "Eskolatze proposamen-txostena",
+                "CNE-en kudeaketa",
+                "Jokabide kasuak",
+                "ZIP gelako eginbeharrak",
+                "LIP gelako eginbeharrak",
+                "Ikaslearen eskuhartze plana"
+            ],
+            "Bizikidetza": ["Jokabide kasuak", "Ikasleen konbibentzia"],
+            "Posbentzioa": ["Prebentzio programak"],
+            "Admin": []
+        };
+
+        // Eginkizun bakoitzak zein eremu behar dituen
+        const EGINKIZUN_EREMUAK = {
+            "Ebaluazio psikopedagogiko berria":                   { ikasleId: true,  ebaluazioMota: true,  zehaztu: false },
+            "Berriztu egin behar den ebaluazio psikopedagogikoa": { ikasleId: true,  ebaluazioMota: true,  zehaztu: false },
+            "Txosten psikopedagogikoa":                           { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
+            "Eskolatze proposamen-txostena":                      { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
+            "CNE-en kudeaketa":                                   { ikasleId: false, ebaluazioMota: false, zehaztu: false },
+            "Jokabide kasuak":                                    { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
+            "ZIP gelako eginbeharrak":                            { ikasleId: false, ebaluazioMota: false, zehaztu: true },
+            "LIP gelako eginbeharrak":                            { ikasleId: false, ebaluazioMota: false, zehaztu: true },
+            "Ikaslearen eskuhartze plana":                        { ikasleId: true,  ebaluazioMota: false, zehaztu: false }
+        };
+        const EREMU_LEHENETSIAK = { ikasleId: true, ebaluazioMota: false, zehaztu: false };
+
+        function updateEremuak() {
+            const tarea = document.getElementById('registroTarea').value;
+            const cfg = EGINKIZUN_EREMUAK[tarea] || EREMU_LEHENETSIAK;
+            document.getElementById('grupoIkaslea').style.display = cfg.ikasleId ? '' : 'none';
+            document.getElementById('grupoEbaluazioMota').style.display = cfg.ebaluazioMota ? '' : 'none';
+            document.getElementById('grupoZehaztu').style.display = cfg.zehaztu ? '' : 'none';
+        }
+
+        // ============ ESTADO GLOBAL ============
+        let usuarioActual = null;
+        let aholkulariak = JSON.parse(localStorage.getItem('hlbp_aholkulariak')) || datosAholkulariak;
+        let registros = JSON.parse(localStorage.getItem('hlbp_registros')) || [];
+
+        // ============ LOGIN ============
+        function login() {
+            const codigo = document.getElementById('codigoInput').value.toUpperCase().trim();
+            const errorDiv = document.getElementById('loginError');
+
+            if (!codigo) {
+                mostrarError('Kodigoa sartu behar da');
+                return;
+            }
+
+            const aholkularia = aholkulariak.find(a => a.codigo === codigo);
+            if (!aholkularia) {
+                mostrarError('Kodigoa ez dago aurkitzen');
+                return;
+            }
+
+            usuarioActual = aholkularia;
+            localStorage.setItem('hlbp_usuario_actual', JSON.stringify(aholkularia));
+
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('appContainer').classList.add('show');
+
+            cargarDatos();
+        }
+
+        function mostrarError(msg) {
+            const div = document.getElementById('loginError');
+            div.textContent = '❌ ' + msg;
+            div.classList.add('show');
+            setTimeout(() => div.classList.remove('show'), 3000);
+        }
+
+        // ============ CARGAR DATOS ============
+        function cargarDatos() {
+            if (!usuarioActual) return;
+
+            document.getElementById('userNameDisplay').textContent = usuarioActual.nombre;
+            document.getElementById('userSpecialtyDisplay').textContent = usuarioActual.especialidad;
+
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+            const isAHL = usuarioActual.codigo.startsWith('AHL');
+
+            // Erakutsi rol-aren etiketa
+            if (isMASTER) {
+                document.getElementById('userTypeDisplay').textContent = '⚙️ Admin Master';
+            } else if (isADMIN) {
+                document.getElementById('userTypeDisplay').textContent = '⚙️ Admin';
+            } else {
+                document.getElementById('userTypeDisplay').textContent = usuarioActual.especialidad;
+            }
+
+            // Mostrar/ocultar menú admin eta registro-ak
+            if (isMASTER) {
+                document.getElementById('navMenu').innerHTML = `
+                    <li class="nav-item"><button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="showPage('admin')">⚙️ Administrazioa</button></li>
+                `;
+                document.getElementById('registroPage').style.display = 'none';
+                document.getElementById('historialPage').style.display = 'none';
+            } else if (isADMIN) {
+                document.getElementById('navMenu').innerHTML = `
+                    <li class="nav-item"><button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="showPage('admin')">⚙️ Administrazioa</button></li>
+                `;
+                document.getElementById('registroPage').style.display = 'none';
+                document.getElementById('historialPage').style.display = 'none';
+            } else if (isAHL) {
+                document.getElementById('registroPage').style.display = 'block';
+                document.getElementById('historialPage').style.display = 'block';
+                cargarSelectCentros();
+                cargarSelectTareas();
+            }
+
+            if (isAHL) {
+                document.getElementById('registroAholkularia').value = usuarioActual.nombre;
+                document.getElementById('registroData').value = new Date().toISOString().split('T')[0];
+            }
+
+            document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('eu-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            actualizarDashboard();
+
+            if (isAHL) {
+                actualizarHistorial();
+            } else if (isMASTER || isADMIN) {
+                actualizarAdminPanel();
+                // Aholkularia gehitu atalak MASTER bakarrik ikusgarria izan daiteke
+                document.getElementById('adminGestionSekcio').style.display = isMASTER ? 'block' : 'none';
+            }
+        }
+
+        // ============ DASHBOARD ============
+        function actualizarDashboard() {
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+            const isAHL = usuarioActual.codigo.startsWith('AHL');
+
+            if (isMASTER || isADMIN) {
+                // Admin panel baterako
+                document.getElementById('dashboardTitle').textContent = isMASTER ? '👨‍💼 Panel Master' : '⚙️ Panel Administrazioa';
+                actualizarEstadisticasAdmin();
+            } else if (isAHL) {
+                // Aholkulariarako
+                const misRegistros = registros.filter(r => r.aholkularia === usuarioActual.codigo);
+                const hoy = new Date().toISOString().split('T')[0];
+                const hoysRegistros = misRegistros.filter(r => r.data === hoy).length;
+
+                document.getElementById('dashboardTitle').textContent = 'Ongi etorri, ' + usuarioActual.nombre.split(',')[0] + '!';
+
+                const statsHtml = `
+                    <div class="stat-card">
+                        <h3>Erregistro Osoa</h3>
+                        <div class="number">${misRegistros.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Egunean</h3>
+                        <div class="number">${hoysRegistros}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Zentroak</h3>
+                        <div class="number">${usuarioActual.centros.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Eginkizunak</h3>
+                        <div class="number">${datosEginkizunak[usuarioActual.especialidad]?.length || 0}</div>
+                    </div>
+                `;
+                document.getElementById('statsContainer').innerHTML = statsHtml;
+
+                const userInfoHtml = `
+                    <h2>📌 Zure Deskubertzea</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Berritzegune</label>
+                            <input type="text" value="${usuarioActual.berritzegune}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Espezialitatea</label>
+                            <input type="text" value="${usuarioActual.especialidad}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Zentroak Asignaturik</label>
+                            <input type="text" value="${usuarioActual.centros.length}" readonly>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('userInfoSection').innerHTML = userInfoHtml;
+
+                const centrosDelUsuario = datosCentros.filter(c => usuarioActual.centros.includes(c.codigo));
+                const centrosHtml = `
+                    <h2>🏫 Zure Zentroak</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kodigoa</th>
+                                    <th>Ikastetxea</th>
+                                    <th>Udala</th>
+                                    <th>Eragingunea</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${centrosDelUsuario.map(c => `
+                                    <tr>
+                                        <td><strong>${c.codigo}</strong></td>
+                                        <td>${c.nombre}</td>
+                                        <td>${c.udalerria}</td>
+                                        <td><span class="badge badge-primary">${c.zona}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                document.getElementById('userCentrosSection').innerHTML = centrosHtml;
+            }
+        }
+
+        function actualizarEstadisticasAdmin() {
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+
+            let registrosFiltrados = registros;
+            let aholkulariakFiltrados = aholkulariak;
+
+            if (isADMIN) {
+                // Admin-ak bakarrik bere berritzegunearen aholkularia eta erregistroak ikus
+                aholkulariakFiltrados = aholkulariak.filter(a => a.berritzegune === usuarioActual.berritzegune);
+                const aholkulariakKodiguak = aholkulariakFiltrados.map(a => a.codigo);
+                registrosFiltrados = registros.filter(r => aholkulariakKodiguak.includes(r.aholkularia));
+            }
+
+            const centrosFiltrados = new Set(registrosFiltrados.map(r => r.centro)).size;
+
+            const statsHtml = `
+                <div class="stat-card">
+                    <h3>Erregistro Osoa</h3>
+                    <div class="number">${registrosFiltrados.length}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Aholkulariak Aktiboak</h3>
+                    <div class="number">${aholkulariakFiltrados.filter(a => a.codigo !== 'MASTER' && !a.codigo.startsWith('ADMIN')).length}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Zentro Desberdinak</h3>
+                    <div class="number">${centrosFiltrados}</div>
+                </div>
+            `;
+            document.getElementById('statsContainer').innerHTML = statsHtml;
+            document.getElementById('userInfoSection').innerHTML = '';
+            document.getElementById('userCentrosSection').innerHTML = '';
+        }
+
+        // ============ SELECTS ============
+        function cargarSelectCentros() {
+            const select = document.getElementById('registroCentro');
+            const centrosDelUsuario = datosCentros.filter(c => usuarioActual.centros.includes(c.codigo));
+
+            select.innerHTML = '<option value="">Aukeratu ikastetxea...</option>' +
+                centrosDelUsuario.map(c => `<option value="${c.codigo}">${c.nombre}</option>`).join('');
+        }
+
+        function cargarSelectTareas() {
+            const tareas = datosEginkizunak[usuarioActual.especialidad] || [];
+            const select = document.getElementById('registroTarea');
+
+            select.innerHTML = '<option value="">Aukeratu eginkizuna...</option>' +
+                tareas.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+
+        function updateTareas() {}
+
+        // ============ GUARDAR REGISTRO ============
+        function guardarRegistro() {
+            const centro = document.getElementById('registroCentro').value;
+            const tarea = document.getElementById('registroTarea').value;
+            const ikaslea = document.getElementById('registroIkaslea').value.trim();
+            const ebaluazioMota = document.getElementById('registroEbaluazioMota').value;
+            const zehaztu = document.getElementById('registroZehaztu').value.trim();
+            const data = document.getElementById('registroData').value;
+            const egoera = document.getElementById('registroEgoera').value;
+            const oharrak = document.getElementById('registroOharrak').value;
+
+            const cfg = EGINKIZUN_EREMUAK[tarea] || EREMU_LEHENETSIAK;
+
+            if (!centro || !tarea || !data) {
+                alert('Eremu guztiak (*) bete behar dira');
+                return;
+            }
+            if (cfg.ikasleId && !ikaslea) {
+                alert('Ikaslearen ID bete behar da (EZ erabili izen-abizenik, ID kodea bakarrik)');
+                return;
+            }
+            if (cfg.ebaluazioMota && !ebaluazioMota) {
+                alert('Ebaluazio mota aukeratu behar da');
+                return;
+            }
+            if (cfg.zehaztu && !zehaztu) {
+                alert('"Zehaztu" eremua bete behar da');
+                return;
+            }
+
+            const nuevoRegistro = {
+                id: Date.now(),
+                aholkularia: usuarioActual.codigo,
+                centro: datosCentros.find(c => c.codigo === centro)?.nombre || centro,
+                tarea,
+                ikaslea: cfg.ikasleId ? ikaslea : '',
+                ebaluazioMota: cfg.ebaluazioMota ? ebaluazioMota : '',
+                zehaztu: cfg.zehaztu ? zehaztu : '',
+                data,
+                egoera,
+                oharrak,
+                timestamp: new Date().toISOString()
+            };
+
+            registros.push(nuevoRegistro);
+            localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+
+            const alertDiv = document.getElementById('successAlert');
+            alertDiv.classList.add('show');
+            setTimeout(() => alertDiv.classList.remove('show'), 3000);
+
+            limpiarRegistro();
+            actualizarHistorial();
+            actualizarDashboard();
+        }
+
+        function limpiarRegistro() {
+            document.getElementById('registroCentro').value = '';
+            document.getElementById('registroTarea').value = '';
+            document.getElementById('registroIkaslea').value = '';
+            document.getElementById('registroEbaluazioMota').value = '';
+            document.getElementById('registroZehaztu').value = '';
+            document.getElementById('registroOharrak').value = '';
+            document.getElementById('registroEgoera').value = 'Egin gabe';
+            updateEremuak();
+        }
+
+        // ============ HISTORIAL ============
+        function actualizarHistorial() {
+            const misRegistros = registros.filter(r => r.aholkularia === usuarioActual.codigo).reverse();
+            const tbody = document.getElementById('historialTable');
+
+            if (misRegistros.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Ez dago erregistrorik</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = misRegistros.map(r => `
+                <tr>
+                    <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                    <td>${r.centro}</td>
+                    <td><small>${r.tarea}${r.ebaluazioMota ? ' (' + r.ebaluazioMota + ')' : ''}${r.zehaztu ? ' — ' + r.zehaztu : ''}</small></td>
+                    <td><strong>${r.ikaslea || '—'}</strong></td>
+                    <td><span class="badge badge-${r.egoera === 'Eginda' ? 'success' : 'primary'}">${r.egoera}</span></td>
+                    <td><button class="btn btn-danger" onclick="eliminarRegistro(${r.id})">Ezabatu</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function eliminarRegistro(id) {
+            if (confirm('Ziur al zaude?')) {
+                registros = registros.filter(r => r.id !== id);
+                localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+                actualizarHistorial();
+                actualizarDashboard();
+            }
+        }
+
+        // ============ ADMIN PANEL ============
+        function actualizarAdminPanel() {
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+
+            // Ezkutatu Ekintza (Ezabatu) botoia eta exportazio botoiak ADMIN-arentzat
+            document.getElementById('aktzioaHead').style.display = isMASTER ? 'table-cell' : 'none';
+            document.getElementById('exportButtonGroup').style.display = isMASTER ? 'flex' : 'none';
+
+            // Filtratu aholkularia eta erregistroak rola araberagatik
+            let aholkulariakaForTabla = aholkulariak.filter(a => a.codigo !== 'MASTER' && !a.codigo.startsWith('ADMIN'));
+            let registrosParaTabla = registros;
+
+            if (isADMIN) {
+                // Admin-ak bakarrik bere berritzegunearen aholkularia
+                aholkulariakaForTabla = aholkulariakaForTabla.filter(a => a.berritzegune === usuarioActual.berritzegune);
+                const aholkulariakKodiguak = aholkulariakaForTabla.map(a => a.codigo);
+                registrosParaTabla = registros.filter(r => aholkulariakKodiguak.includes(r.aholkularia));
+            }
+
+            // Eguneratu estadistikak
+            document.getElementById('adminTotalRegistros').textContent = registrosParaTabla.length;
+            document.getElementById('adminTotalAholkulariak').textContent = aholkulariakaForTabla.length;
+            document.getElementById('adminTotalCentros').textContent = new Set(registrosParaTabla.map(r => r.centro)).size;
+
+            // Eguneratu aholkularia taula
+            const tbody = document.getElementById('adminUsersTable');
+            tbody.innerHTML = aholkulariakaForTabla.map(a => {
+                const misRegistros = registrosParaTabla.filter(r => r.aholkularia === a.codigo);
+                return `
+                    <tr onclick="mostrarPanelAholkularia('${a.codigo}')" style="cursor: pointer;">
+                        <td><strong>${a.codigo}</strong></td>
+                        <td>${a.nombre}</td>
+                        <td>${a.berritzegune}</td>
+                        <td><span class="badge badge-primary">${a.especialidad}</span></td>
+                        <td>${a.centros.length} zentro</td>
+                        <td>
+                            <small style="color: #999;">${misRegistros.length} erregistro</small>
+                        </td>
+                        <td style="display: ${isMASTER ? 'table-cell' : 'none'};"><button class="btn btn-danger" onclick="event.stopPropagation(); eliminarAholkularia('${a.codigo}')">Ezabatu</button></td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Eguneratu erregistroa taula
+            const registrosTable = document.getElementById('adminAllRegistrosTable');
+            registrosTable.innerHTML = registrosParaTabla.reverse().map(r => `
+                <tr>
+                    <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                    <td>${r.aholkularia}</td>
+                    <td>${r.centro}</td>
+                    <td><small>${r.tarea}</small></td>
+                    <td><strong>${r.ikaslea}</strong></td>
+                    <td><span class="badge badge-success">${r.egoera}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Aholkularia panela ageri daiteke (izenean klika)
+        function mostrarPanelAholkularia(codigo) {
+            const aholkularia = aholkulariak.find(a => a.codigo === codigo);
+            if (!aholkularia) return;
+
+            alert('🔍 ' + aholkularia.nombre + '\n' + aholkularia.berritzegune + '\n' + aholkularia.especialidad);
+        }
+
+        function agregarAholkularia() {
+            // MASTER bakarrik aholkularia gehitu dezake
+            if (usuarioActual.codigo !== 'MASTER') {
+                alert('⛔ Admin bakarrik aholkularia gehitu dezake');
+                return;
+            }
+
+            const nombre = document.getElementById('adminNewNombre').value;
+            const codigo = document.getElementById('adminNewCodigo').value.toUpperCase();
+            const berritzegune = document.getElementById('adminNewBerritzegune').value;
+            const especialidad = document.getElementById('adminNewEspecialidad').value;
+            const centrosStr = document.getElementById('adminNewCentros').value;
+
+            if (!nombre || !codigo || !berritzegune || !especialidad || !centrosStr) {
+                alert('Betshi osatu behar dira denak (*)');
+                return;
+            }
+
+            if (aholkulariak.find(a => a.codigo === codigo)) {
+                alert('Kodigoa dagoeneko existitzen da');
+                return;
+            }
+
+            const centros = centrosStr.split(',').map(c => c.trim());
+
+            aholkulariak.push({
+                codigo,
+                nombre,
+                berritzegune,
+                especialidad,
+                centros
+            });
+
+            localStorage.setItem('hlbp_aholkulariak', JSON.stringify(aholkulariak));
+
+            alert('✅ Aholkularia gehitu da ✅\nKodigoa: ' + codigo);
+
+            document.getElementById('adminNewNombre').value = '';
+            document.getElementById('adminNewCodigo').value = '';
+            document.getElementById('adminNewBerritzegune').value = '';
+            document.getElementById('adminNewEspecialidad').value = '';
+            document.getElementById('adminNewCentros').value = '';
+
+            actualizarAdminPanel();
+        }
+
+        function eliminarAholkularia(codigo) {
+            if (confirm('Ziur al zaude ezabatu nahi duzula?')) {
+                aholkulariak = aholkulariak.filter(a => a.codigo !== codigo);
+                localStorage.setItem('hlbp_aholkulariak', JSON.stringify(aholkulariak));
+                actualizarAdminPanel();
+            }
+        }
+
+        // ============ EXPORTACIONES ============
+        function exportarExcelCompleto() {
+            let csv = "Data\tAholkularia\tIkastetxea\tEginkizuna\tEbaluazio mota\tZehaztu\tIkaslearen ID\tEgoera\tOharrak\n";
+            registros.forEach(r => {
+                csv += `${r.data}\t${r.aholkularia}\t${r.centro}\t${r.tarea}\t${r.ebaluazioMota || ''}\t${r.zehaztu || ''}\t${r.ikaslea || ''}\t${r.egoera}\t${r.oharrak}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `HLBP_Guztia_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        function exportarJSON() {
+            const backup = {
+                aholkulariak,
+                registros,
+                exportedAt: new Date().toISOString()
+            };
+
+            const json = JSON.stringify(backup, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `HLBP_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // ============ CENTROS ============
+        let centroPorVerDetalles = null;
+
+        function cargarCentros() {
+            const centrosConRegistros = {};
+
+            registros.forEach(r => {
+                if (!centrosConRegistros[r.centro]) {
+                    centrosConRegistros[r.centro] = [];
+                }
+                centrosConRegistros[r.centro].push(r);
+            });
+
+            const grid = document.getElementById('centrosGrid');
+            const centrosUnicos = [...new Set(registros.map(r => r.centro))];
+
+            if (centrosUnicos.length === 0) {
+                grid.innerHTML = '<div class="no-data">Ez dago erregistrorik oraindik</div>';
+                return;
+            }
+
+            grid.innerHTML = centrosUnicos.map(centro => {
+                const registrosCentro = centrosConRegistros[centro] || [];
+                const hoy = new Date().toISOString().split('T')[0];
+                const hoysRegistros = registrosCentro.filter(r => r.data === hoy).length;
+                const aholkulariak = new Set(registrosCentro.map(r => r.aholkularia)).size;
+                const tareas = new Set(registrosCentro.map(r => r.tarea)).size;
+
+                return `
+                    <div class="centro-card" onclick="verDetalleCentro('${centro}')">
+                        <h3>🏫 ${centro}</h3>
+                        <p>Erregistroak: ${registrosCentro.length}</p>
+                        <div class="centro-stats">
+                            <div class="centro-stat-item">
+                                <div class="label">Egunkoak</div>
+                                <div class="value">${hoysRegistros}</div>
+                            </div>
+                            <div class="centro-stat-item">
+                                <div class="label">Aholkulariak</div>
+                                <div class="value">${aholkulariak}</div>
+                            </div>
+                            <div class="centro-stat-item">
+                                <div class="label">Eginkizunak</div>
+                                <div class="value">${tareas}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function verDetalleCentro(centro) {
+            centroPorVerDetalles = centro;
+            const registrosCentro = registros.filter(r => r.centro === centro);
+            const hoy = new Date().toISOString().split('T')[0];
+            const hoysRegistros = registrosCentro.filter(r => r.data === hoy).length;
+            const aholkulariak = new Set(registrosCentro.map(r => r.aholkularia)).size;
+            const tareas = new Set(registrosCentro.map(r => r.tarea)).size;
+
+            document.getElementById('centroNombre').textContent = `🏫 ${centro}`;
+            document.getElementById('centroTotalRegistros').textContent = registrosCentro.length;
+            document.getElementById('centroRegistrosHoy').textContent = hoysRegistros;
+            document.getElementById('centroAholkulariak').textContent = aholkulariak;
+            document.getElementById('centroTareas').textContent = tareas;
+
+            const tbody = document.getElementById('centroRegistrosTable');
+            if (registrosCentro.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-data">Ez dago erregistrorik</td></tr>';
+            } else {
+                tbody.innerHTML = registrosCentro.reverse().map(r => `
+                    <tr>
+                        <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                        <td><strong>${r.aholkularia}</strong></td>
+                        <td><small>${r.tarea}</small></td>
+                        <td>${r.ikaslea}</td>
+                        <td><span class="badge badge-${r.egoera === 'Osatu' ? 'success' : 'primary'}">${r.egoera}</span></td>
+                    </tr>
+                `).join('');
+            }
+
+            document.getElementById('centroLista').style.display = 'none';
+            document.getElementById('centroDetalle').style.display = 'block';
+        }
+
+        function volverCentros() {
+            centroPorVerDetalles = null;
+            document.getElementById('centroLista').style.display = 'block';
+            document.getElementById('centroDetalle').style.display = 'none';
+        }
+
+        // ============ NAVEGACIÓN ============
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+            const pages = {
+                'dashboard': 'dashboardPage',
+                'registro': 'registroPage',
+                'historial': 'historialPage',
+                'centros': 'centrosPage',
+                'admin': 'adminPage'
+            };
+
+            const page = document.getElementById(pages[pageName]);
+            if (page) page.classList.add('active');
+
+            event.target.classList.add('active');
+
+            if (pageName === 'admin') actualizarAdminPanel();
+            if (pageName === 'centros') cargarCentros();
+        }
+
+        // ============ LOGOUT ============
+        function logout() {
+            if (confirm('Ziur al zaude irten nahi duzula?')) {
+                usuarioActual = null;
+                localStorage.removeItem('hlbp_usuario_actual');
+
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.getElementById('appContainer').classList.remove('show');
+                document.getElementById('codigoInput').value = '';
+                document.getElementById('codigoInput').focus();
+            }
+        }
+
+        // ============ INICIALIZACIÓN ============
+        window.addEventListener('DOMContentLoaded', () => {
+            const usuarioGuardado = localStorage.getItem('hlbp_usuario_actual');
+            if (usuarioGuardado) {
+                usuarioActual = JSON.parse(usuarioGuardado);
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('appContainer').classList.add('show');
+                cargarDatos();
+            } else {
+                document.getElementById('codigoInput').focus();
+            }
+
+            document.getElementById('codigoInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') login();
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
