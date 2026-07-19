@@ -1949,6 +1949,7 @@
                     actualizarAdminPanel();
                 } else {
                     actualizarHistorial();
+                    cargarCentros();
                 }
                 if (fichaIrekita) mostrarPanelAholkularia(fichaIrekita, true);
             } catch (e) {
@@ -2586,10 +2587,25 @@
         // ============ CENTROS ============
         let centroPorVerDetalles = null;
 
+        // Rol bakoitzak ikus ditzakeen erregistroak:
+        // MASTER: guztiak | ADMIN: bere berritzegunekoenak | AHL: bereak bakarrik
+        function registrosVisiblesRolarentzat() {
+            if (!usuarioActual) return [];
+            if (usuarioActual.codigo === 'MASTER') return registros;
+            if (usuarioActual.codigo.startsWith('ADMIN')) {
+                const nireKodigoak = aholkulariak
+                    .filter(a => a.berritzegune === usuarioActual.berritzegune)
+                    .map(a => a.codigo);
+                return registros.filter(r => nireKodigoak.includes(r.aholkularia));
+            }
+            return registros.filter(r => r.aholkularia === usuarioActual.codigo);
+        }
+
         function cargarCentros() {
+            const nireRegistroak = registrosVisiblesRolarentzat();
             const centrosConRegistros = {};
 
-            registros.forEach(r => {
+            nireRegistroak.forEach(r => {
                 if (!centrosConRegistros[r.centro]) {
                     centrosConRegistros[r.centro] = [];
                 }
@@ -2597,7 +2613,17 @@
             });
 
             const grid = document.getElementById('centrosGrid');
-            const centrosUnicos = [...new Set(registros.map(r => r.centro))];
+            let centrosUnicos;
+            if (usuarioActual.codigo.startsWith('AHL')) {
+                // Aholkulariak: esleitutako zentro GUZTIAK erakutsi (erregistrorik gabekoak ere)
+                const esleituak = usuarioActual.centros.map(c => {
+                    const z = datosCentros.find(x => x.codigo === c);
+                    return z ? z.nombre : c;
+                });
+                centrosUnicos = [...new Set([...esleituak, ...nireRegistroak.map(r => r.centro)])];
+            } else {
+                centrosUnicos = [...new Set(nireRegistroak.map(r => r.centro))];
+            }
 
             if (centrosUnicos.length === 0) {
                 grid.innerHTML = '<div class="no-data">Ez dago erregistrorik oraindik</div>';
@@ -2636,7 +2662,7 @@
 
         function verDetalleCentro(centro) {
             centroPorVerDetalles = centro;
-            const registrosCentro = registros.filter(r => r.centro === centro);
+            const registrosCentro = registrosVisiblesRolarentzat().filter(r => r.centro === centro);
             const hoy = new Date().toISOString().split('T')[0];
             const hoysRegistros = registrosCentro.filter(r => r.data === hoy).length;
             const aholkulariak = new Set(registrosCentro.map(r => r.aholkularia)).size;
@@ -2657,8 +2683,8 @@
                         <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
                         <td><strong>${r.aholkularia}</strong></td>
                         <td><small>${r.tarea}</small></td>
-                        <td>${r.ikaslea}</td>
-                        <td><span class="badge badge-${r.egoera === 'Osatu' ? 'success' : 'primary'}">${r.egoera}</span></td>
+                        <td>${r.ikaslea || '—'}</td>
+                        <td><span class="badge badge-${r.egoera === 'Eginda' ? 'success' : 'primary'}">${r.egoera}</span></td>
                     </tr>
                 `).join('');
             }
