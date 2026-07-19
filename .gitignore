@@ -5,6 +5,9 @@
 # Aholkularien izen errealak dituen fitxategia
 data.js
 
+# Kodigoen banaketa-zerrenda (izen errealak ditu)
+Kodigoen_banaketa.csv
+
 # Excel fitxategiak (izen errealak dituzte)
 *.xlsx
 
