@@ -2009,29 +2009,34 @@
                 document.getElementById('userTypeDisplay').textContent = usuarioActual.especialidad;
             }
 
-            // Mostrar/ocultar menú admin eta registro-ak
-            if (isMASTER) {
+            // Nabigazio-menua BETI berreraiki rolaren arabera
+            // (bestela aurreko saioko menua geratzen da, adib. MASTER-en Administrazioa)
+            if (isMASTER || isADMIN) {
                 document.getElementById('navMenu').innerHTML = `
                     <li class="nav-item"><button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button></li>
                     <li class="nav-item"><button class="nav-link" onclick="showPage('admin')">⚙️ Administrazioa</button></li>
                 `;
                 document.getElementById('registroPage').style.display = 'none';
                 document.getElementById('historialPage').style.display = 'none';
-            } else if (isADMIN) {
+            } else {
                 document.getElementById('navMenu').innerHTML = `
                     <li class="nav-item"><button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button></li>
-                    <li class="nav-item"><button class="nav-link" onclick="showPage('admin')">⚙️ Administrazioa</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="showPage('registro')">📝 Erregistroa</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="showPage('historial')">📋 Historiala</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="showPage('centros')">🏫 Zentroetako Erregistroa</button></li>
                 `;
-                document.getElementById('registroPage').style.display = 'none';
-                document.getElementById('historialPage').style.display = 'none';
-            } else if (isAHL) {
                 document.getElementById('registroPage').style.display = 'block';
                 document.getElementById('historialPage').style.display = 'block';
                 cargarSelectCentros();
                 cargarSelectTareas();
             }
 
-            if (isAHL) {
+            // Orri aktiboa BETI dashboard-era itzuli saioa hastean
+            // (bestela aurreko saioko orria irekita gera daiteke, adib. admin panela)
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('dashboardPage').classList.add('active');
+
+            if (!isMASTER && !isADMIN) {
                 document.getElementById('registroAholkularia').value = usuarioActual.nombre;
                 document.getElementById('registroData').value = new Date().toISOString().split('T')[0];
             }
@@ -2045,12 +2050,12 @@
 
             actualizarDashboard();
 
-            if (isAHL) {
-                actualizarHistorial();
-            } else if (isMASTER || isADMIN) {
+            if (isMASTER || isADMIN) {
                 actualizarAdminPanel();
                 // Aholkularia gehitu atalak MASTER bakarrik ikusgarria izan daiteke
                 document.getElementById('adminGestionSekcio').style.display = isMASTER ? 'block' : 'none';
+            } else {
+                actualizarHistorial();
             }
         }
 
@@ -2064,7 +2069,7 @@
                 // Admin panel baterako
                 document.getElementById('dashboardTitle').textContent = isMASTER ? '👨‍💼 Panel Master' : '⚙️ Panel Administrazioa';
                 actualizarEstadisticasAdmin();
-            } else if (isAHL) {
+            } else {
                 // Aholkulariarako
                 const misRegistros = registros.filter(r => r.aholkularia === usuarioActual.codigo);
                 const hoy = new Date().toISOString().split('T')[0];
@@ -2701,6 +2706,11 @@
 
         // ============ NAVEGACIÓN ============
         function showPage(pageName) {
+            // SEGURTASUNA: admin orria MASTER/ADMIN rolentzat bakarrik
+            const adminDa = usuarioActual && (usuarioActual.codigo === 'MASTER' || usuarioActual.codigo.startsWith('ADMIN'));
+            if (pageName === 'admin' && !adminDa) return;
+            if (adminDa && ['registro', 'historial', 'centros'].includes(pageName)) return;
+
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 
@@ -2715,7 +2725,9 @@
             const page = document.getElementById(pages[pageName]);
             if (page) page.classList.add('active');
 
-            event.target.classList.add('active');
+            if (typeof event !== 'undefined' && event && event.target && event.target.classList) {
+                event.target.classList.add('active');
+            }
 
             if (pageName === 'admin') actualizarAdminPanel();
             if (pageName === 'centros') cargarCentros();
