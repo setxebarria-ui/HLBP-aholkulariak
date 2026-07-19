@@ -514,6 +514,60 @@
             .sidebar { width: 250px; }
             .form-grid { grid-template-columns: 1fr; }
         }
+
+        /* Aholkulariaren fitxa modala */
+        .ficha-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: none;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 30px 15px;
+        }
+
+        .ficha-overlay.show {
+            display: block;
+        }
+
+        .ficha-modal {
+            background: var(--light);
+            border-radius: 12px;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .ficha-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .ficha-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .sync-egoera {
+            display: block;
+            font-size: 10px;
+            margin-top: 8px;
+            color: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -545,6 +599,7 @@
                 <strong id="userNameDisplay">Aholkularia</strong>
                 <p id="userSpecialtyDisplay" style="margin-bottom: 5px;">Espezialitatea</p>
                 <span class="user-badge" id="userTypeDisplay">Aholkularia</span>
+                <span class="sync-egoera" id="syncEgoera">⚪ Lokala (sinkronizaziorik gabe)</span>
             </div>
 
             <ul class="nav-menu" id="navMenu">
@@ -848,6 +903,9 @@
 
     <script src="data.example.js"></script>
     <script src="data.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         // ============ DATOS ESTÁTICOS ============
         // Datu lehenetsiak (izen generikoak - GitHub bertsio publikorako).
@@ -887,7 +945,7 @@
     { codigo: "AHL032", nombre: "Aholkulari 32", berritzegune: "BERRITZEGUNE G05", especialidad: "Inklusioa", centros: ["012002","012037","012137","012153","012288","012291","012292","012350","012399","012726","012985","013070","013635"] },
     { codigo: "AHL033", nombre: "Aholkulari 33", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["014287","014367","014384","014529","014747","014751","014754","014865","015143"] },
     { codigo: "AHL034", nombre: "Aholkulari 34", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["014457","014727","014731","014732","014920","014938","014950","014974","015090","015307","015342"] },
-    { codigo: "AHL035", nombre: "Aholkulari 35", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["014109","014111","014186","014508","014509","014658","015191","015360"] },
+    { codigo: "AHL035", nombre: "Aholkulari 35", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014109","014111","014186","014508","014509","014658","015191","015360"] },
     { codigo: "AHL036", nombre: "Aholkulari 36", berritzegune: "BERRITZEGUNE B03", especialidad: "Inklusioa", centros: ["014390","014391","014430","014438","014441","014550","014817","014928","014976"] },
     { codigo: "AHL037", nombre: "Aholkulari 37", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["014149","014618","014619","014637","014643","014680","014704","015075","015833"] },
     { codigo: "AHL038", nombre: "Aholkulari 38", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["012184","012202","012479","012485","012490","012492","012494","012495","012722","013025","013624"] },
@@ -937,7 +995,7 @@
     { codigo: "AHL082", nombre: "Aholkulari 82", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010003","010009","010142","010192","010723"] },
     { codigo: "AHL083", nombre: "Aholkulari 83", berritzegune: "BERRITZEGUNE G05", especialidad: "Inklusioa", centros: ["012019","012038","012073","012320","012386","012585","012586","013380","013555","013556"] },
     { codigo: "AHL084", nombre: "Aholkulari 84", berritzegune: "BERRITZEGUNE B05", especialidad: "Inklusioa", centros: ["014004","014010","014401","014445","014492","014549","014799","014824","014958","015757","015870","015892"] },
-    { codigo: "AHL085", nombre: "Aholkulari 85", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010002","010049","010214","010221","010222","010229","010234","010514","010613"] },
+    { codigo: "AHL085", nombre: "Aholkulari 85", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010002","010049","010214","010221","010222","010229","010234","010514","010613"] },
     { codigo: "AHL086", nombre: "Aholkulari 86", berritzegune: "BERRITZEGUNE G06", especialidad: "Inklusioa", centros: ["012261","012310","012378","012729","012957","012973","012974","012975","013022","013437","013532","013554"] },
     { codigo: "AHL087", nombre: "Aholkulari 87", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["014258","014260","014372","014452","014520","014726","015082","015100","015189","015376","015463","015667","015779"] },
     { codigo: "AHL088", nombre: "Aholkulari 88", berritzegune: "BERRITZEGUNE B06", especialidad: "Inklusioa", centros: ["014027","014029","014073","014074","014237","014279","014280","014379","015245"] },
@@ -1825,6 +1883,59 @@
         let usuarioActual = null;
         let aholkulariak = JSON.parse(localStorage.getItem('hlbp_aholkulariak')) || datosAholkulariak;
         let registros = JSON.parse(localStorage.getItem('hlbp_registros')) || [];
+        let fichaIrekita = null;
+
+        // ============ FIREBASE SINKRONIZAZIOA ============
+        let db = null;
+        let firebasePrest = false;
+
+        if (window.FIREBASE_CONFIG && typeof firebase !== 'undefined') {
+            try {
+                firebase.initializeApp(window.FIREBASE_CONFIG);
+                db = firebase.database();
+                db.ref('registros').on('value', (snap) => {
+                    registros = Object.values(snap.val() || {});
+                    localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+                    firebasePrest = true;
+                    actualizarSyncEgoera();
+                    refrescarVistas();
+                }, (err) => {
+                    console.error('Firebase sinkronizazio errorea:', err);
+                    firebasePrest = false;
+                    actualizarSyncEgoera();
+                });
+            } catch (e) {
+                console.error('Firebase hasieraketa errorea:', e);
+                db = null;
+            }
+        }
+
+        function actualizarSyncEgoera() {
+            const el = document.getElementById('syncEgoera');
+            if (!el) return;
+            if (db && firebasePrest) {
+                el.textContent = '🟢 Sinkronizatuta (Firebase)';
+            } else if (db) {
+                el.textContent = '🟡 Konektatzen...';
+            } else {
+                el.textContent = '⚪ Lokala (sinkronizaziorik gabe)';
+            }
+        }
+
+        function refrescarVistas() {
+            if (!usuarioActual) return;
+            try {
+                actualizarDashboard();
+                if (usuarioActual.codigo === 'MASTER' || usuarioActual.codigo.startsWith('ADMIN')) {
+                    actualizarAdminPanel();
+                } else {
+                    actualizarHistorial();
+                }
+                if (fichaIrekita) mostrarPanelAholkularia(fichaIrekita, true);
+            } catch (e) {
+                console.error('Bistak freskatzean errorea:', e);
+            }
+        }
 
         // ============ LOGIN ============
         function login() {
@@ -2108,8 +2219,13 @@
                 timestamp: new Date().toISOString()
             };
 
-            registros.push(nuevoRegistro);
-            localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+            if (db) {
+                // Firebase-ra idatzi; entzuleak eguneratuko ditu bistak
+                db.ref('registros/' + nuevoRegistro.id).set(nuevoRegistro);
+            } else {
+                registros.push(nuevoRegistro);
+                localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+            }
 
             const alertDiv = document.getElementById('successAlert');
             alertDiv.classList.add('show');
@@ -2155,10 +2271,14 @@
 
         function eliminarRegistro(id) {
             if (confirm('Ziur al zaude?')) {
-                registros = registros.filter(r => r.id !== id);
-                localStorage.setItem('hlbp_registros', JSON.stringify(registros));
-                actualizarHistorial();
-                actualizarDashboard();
+                if (db) {
+                    db.ref('registros/' + id).remove();
+                } else {
+                    registros = registros.filter(r => r.id !== id);
+                    localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+                    actualizarHistorial();
+                    actualizarDashboard();
+                }
             }
         }
 
@@ -2221,11 +2341,130 @@
         }
 
         // Aholkularia panela ageri daiteke (izenean klika)
-        function mostrarPanelAholkularia(codigo) {
-            const aholkularia = aholkulariak.find(a => a.codigo === codigo);
-            if (!aholkularia) return;
+        function mostrarPanelAholkularia(codigo, soilikFreskatu) {
+            const a = aholkulariak.find(x => x.codigo === codigo);
+            if (!a) return;
+            fichaIrekita = codigo;
 
-            alert('🔍 ' + aholkularia.nombre + '\n' + aholkularia.berritzegune + '\n' + aholkularia.especialidad);
+            const regs = registros.filter(r => r.aholkularia === codigo);
+            const eginda = regs.filter(r => r.egoera === 'Eginda');
+            const eginGabe = regs.filter(r => r.egoera !== 'Eginda');
+            const ikasleIrekiak = [...new Set(eginGabe.filter(r => r.ikaslea).map(r => r.ikaslea))];
+            const zentroAktiboak = [...new Set(regs.map(r => r.centro))];
+
+            // Eginkizun mota bakoitzeko banaketa (mota guztiak erakutsi, egin gabekoak ere)
+            const motaGuztiak = datosEginkizunak[a.especialidad] || datosEginkizunak['Inklusioa'] || [];
+            const motak = {};
+            motaGuztiak.forEach(m => motak[m] = { eginda: 0, eginGabe: 0 });
+            regs.forEach(r => {
+                if (!motak[r.tarea]) motak[r.tarea] = { eginda: 0, eginGabe: 0 };
+                if (r.egoera === 'Eginda') motak[r.tarea].eginda++;
+                else motak[r.tarea].eginGabe++;
+            });
+
+            const motakHtml = Object.keys(motak).map(m => {
+                const x = motak[m];
+                const eginGabeKolorea = x.eginGabe > 0 ? 'color: #e8590c; font-weight: 700;' : 'color: #999;';
+                const egindaKolorea = x.eginda > 0 ? 'color: #2b8a3e; font-weight: 700;' : 'color: #999;';
+                const ezDuEgin = (x.eginda + x.eginGabe) === 0;
+                return `
+                    <tr style="${ezDuEgin ? 'opacity: 0.5;' : ''}">
+                        <td><small>${m}</small></td>
+                        <td style="text-align: center; ${egindaKolorea}">${x.eginda}</td>
+                        <td style="text-align: center; ${eginGabeKolorea}">${x.eginGabe}</td>
+                        <td style="text-align: center;">${ezDuEgin ? '<span class="badge" style="background: #e9ecef; color: #868e96;">Ez du eginkizunik</span>' : (x.eginGabe === 0 ? '<span class="badge badge-success">Dena eginda</span>' : '<span class="badge" style="background: #fff3bf; color: #e8590c;">' + x.eginGabe + ' egiteke</span>')}</td>
+                    </tr>`;
+            }).join('');
+
+            const irekiakHtml = eginGabe.length === 0
+                ? '<tr><td colspan="4" class="no-data">Ez dago eskuhartze irekirik 🎉</td></tr>'
+                : eginGabe.slice().reverse().map(r => `
+                    <tr>
+                        <td><strong>${r.ikaslea || '—'}</strong></td>
+                        <td>${r.centro}</td>
+                        <td><small>${r.tarea}${r.ebaluazioMota ? ' (' + r.ebaluazioMota + ')' : ''}${r.zehaztu ? ' — ' + r.zehaztu : ''}</small></td>
+                        <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                    </tr>`).join('');
+
+            const historiaHtml = regs.length === 0
+                ? '<tr><td colspan="5" class="no-data">Ez dago erregistrorik</td></tr>'
+                : regs.slice().reverse().map(r => `
+                    <tr>
+                        <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                        <td>${r.centro}</td>
+                        <td><small>${r.tarea}${r.ebaluazioMota ? ' (' + r.ebaluazioMota + ')' : ''}</small></td>
+                        <td><strong>${r.ikaslea || '—'}</strong></td>
+                        <td><span class="badge badge-${r.egoera === 'Eginda' ? 'success' : 'primary'}">${r.egoera}</span></td>
+                    </tr>`).join('');
+
+            const zentroakHtml = a.centros.map(c => {
+                const z = datosCentros.find(x => x.codigo === c);
+                const izena = z ? z.nombre : c;
+                const kopurua = regs.filter(r => r.centro === izena).length;
+                return `<tr><td>${c}</td><td>${izena}</td><td style="text-align: center;">${kopurua}</td></tr>`;
+            }).join('');
+
+            document.getElementById('fichaEdukia').innerHTML = `
+                <h2 style="margin-bottom: 5px;">👤 ${a.nombre}</h2>
+                <p style="color: #999; margin-bottom: 20px;">${a.codigo} · ${a.berritzegune} · ${a.especialidad}</p>
+
+                <div class="ficha-stats">
+                    <div class="stat-card"><h3>Erregistroak</h3><div class="number">${regs.length}</div></div>
+                    <div class="stat-card" style="border-left-color: var(--success);"><h3>Eginda</h3><div class="number" style="color: #2b8a3e;">${eginda.length}</div></div>
+                    <div class="stat-card" style="border-left-color: var(--warning);"><h3>Egin gabe</h3><div class="number" style="color: #e8590c;">${eginGabe.length}</div></div>
+                    <div class="stat-card"><h3>Ikasle irekiak</h3><div class="number">${ikasleIrekiak.length}</div></div>
+                    <div class="stat-card"><h3>Zentro aktiboak</h3><div class="number">${zentroAktiboak.length} / ${a.centros.length}</div></div>
+                </div>
+
+                <div class="section" style="padding: 20px;">
+                    <h2>📊 Lan motak (zer eginda, zer egiteke)</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Eginkizun mota</th><th style="text-align: center;">Eginda</th><th style="text-align: center;">Egin gabe</th><th style="text-align: center;">Egoera</th></tr></thead>
+                            <tbody>${motakHtml}</tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section" style="padding: 20px;">
+                    <h2>⏳ Eskuhartze irekiak (${eginGabe.length}) — ${ikasleIrekiak.length} ikasle</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Ikaslea (ID)</th><th>Ikastetxea</th><th>Eginkizuna</th><th>Data</th></tr></thead>
+                            <tbody>${irekiakHtml}</tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section" style="padding: 20px;">
+                    <h2>🏫 Esleitutako zentroak (${a.centros.length})</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Kodigoa</th><th>Ikastetxea</th><th style="text-align: center;">Erregistroak</th></tr></thead>
+                            <tbody>${zentroakHtml}</tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section" style="padding: 20px; margin-bottom: 0;">
+                    <h2>📋 Historial osoa (${regs.length})</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Data</th><th>Ikastetxea</th><th>Eginkizuna</th><th>Ikaslea</th><th>Egoera</th></tr></thead>
+                            <tbody>${historiaHtml}</tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            if (!soilikFreskatu) {
+                document.getElementById('fichaOverlay').classList.add('show');
+            }
+        }
+
+        function cerrarFicha() {
+            fichaIrekita = null;
+            document.getElementById('fichaOverlay').classList.remove('show');
         }
 
         function agregarAholkularia() {
@@ -2453,8 +2692,17 @@
             });
         });
     </script>
+
+    <!-- AHOLKULARIAREN FITXA MODALA -->
+    <div class="ficha-overlay" id="fichaOverlay" onclick="if (event.target === this) cerrarFicha()">
+        <div class="ficha-modal">
+            <button class="ficha-close" onclick="cerrarFicha()" title="Itxi">✕</button>
+            <div id="fichaEdukia"></div>
+        </div>
+    </div>
 </body>
 </html>
+
 
 
 
