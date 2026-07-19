@@ -1,0 +1,1531 @@
+﻿<!DOCTYPE html>
+<html lang="eu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLBP - Sistema Profesional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --success: #51cf66;
+            --danger: #ff6b6b;
+            --warning: #ffd43b;
+            --info: #74c0fc;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .login-box p {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 13px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-error {
+            background: #ffe0e0;
+            color: #c00;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        .app-container {
+            display: none;
+            min-height: 100vh;
+            background: var(--light);
+        }
+
+        .app-container.show {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--dark);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+        .user-card strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .user-badge {
+            display: inline-block;
+            background: var(--info);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 15px;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 20px;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+        }
+
+        .logout-btn {
+            width: 100%;
+            margin-top: 30px;
+            background: var(--danger);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card h3 {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: var(--light);
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--success);
+        }
+
+        .badge-admin {
+            background: rgba(255, 212, 59, 0.1);
+            color: #f59f00;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .alert-success {
+            background: rgba(81, 207, 102, 0.1);
+            color: #2b8a3e;
+            display: none;
+        }
+
+        .alert-success.show {
+            display: block;
+        }
+
+        .centro-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .centro-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left-color: var(--secondary);
+        }
+
+        .centro-card h3 {
+            font-size: 16px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .centro-card p {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .centro-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .centro-stat-item {
+            text-align: center;
+        }
+
+        .centro-stat-item .label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .centro-stat-item .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 250px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h1>🎯 HLBP</h1>
+            <p>Sistema Profesional de Kudeaketa</p>
+            <div class="login-error" id="loginError"></div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>Kodigoa</label>
+                    <input type="text" id="codigoInput" placeholder="Sartu zure kodiga" autocomplete="off">
+                </div>
+                <button class="login-btn" onclick="login()">Sartu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div class="app-container" id="appContainer">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🎯 HLBP</h2>
+            </div>
+
+            <div class="user-card">
+                <strong id="userNameDisplay">Aholkularia</strong>
+                <p id="userSpecialtyDisplay" style="margin-bottom: 5px;">Espezialitatea</p>
+                <span class="user-badge" id="userTypeDisplay">Aholkularia</span>
+            </div>
+
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="showPage('registro')">📝 Erregistroa</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="showPage('historial')">📋 Historiala</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" onclick="showPage('centros')">🏫 Zentroetako Erregistroa</button>
+                </li>
+            </ul>
+
+            <button class="logout-btn" onclick="logout()">Irten</button>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- DASHBOARD -->
+            <div class="page active" id="dashboardPage">
+                <div class="page-header">
+                    <h1 id="dashboardTitle">Ongi etorri!</h1>
+                    <p id="dateDisplay"></p>
+                </div>
+
+                <div class="stats-grid" id="statsContainer"></div>
+
+                <div class="section" id="userInfoSection"></div>
+                <div class="section" id="userCentrosSection"></div>
+            </div>
+
+            <!-- REGISTRO -->
+            <div class="page" id="registroPage">
+                <div class="page-header">
+                    <h1>📝 Eginkizun Berria</h1>
+                </div>
+
+                <div class="alert alert-success" id="successAlert">
+                    ✓ Eginkizuna ondo gorde da!
+                </div>
+
+                <div class="section">
+                    <h2>Erregistroaren datuak</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Aholkularia</label>
+                            <input type="text" id="registroAholkularia" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Ikastetxea *</label>
+                            <select id="registroCentro" onchange="updateTareas()">
+                                <option value="">Aukeratu ikastetxea...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Eginkizuna *</label>
+                            <select id="registroTarea" onchange="updateEremuak()">
+                                <option value="">Aukeratu eginkizuna...</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grupoIkaslea">
+                            <label>Ikaslearen ID *</label>
+                            <input type="text" id="registroIkaslea" placeholder="Adib: IK-0234 (EZ izen-abizenik)">
+                        </div>
+                        <div class="form-group" id="grupoEbaluazioMota" style="display: none;">
+                            <label>Ebaluazio mota *</label>
+                            <select id="registroEbaluazioMota">
+                                <option value="">Aukeratu...</option>
+                                <option value="AGH">AGH</option>
+                                <option value="AEN">AEN</option>
+                                <option value="Bestelakoa">Bestelakoa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Data *</label>
+                            <input type="date" id="registroData">
+                        </div>
+                        <div class="form-group">
+                            <label>Egoera</label>
+                            <select id="registroEgoera">
+                                <option value="Egin gabe">Egin gabe</option>
+                                <option value="Eginda">Eginda</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grupoZehaztu" style="display: none; grid-column: 1 / -1;">
+                            <label>Zehaztu *</label>
+                            <textarea id="registroZehaztu" placeholder="Zehaztu eginbeharrak..." style="min-height: 60px;"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Oharrak</label>
+                            <textarea id="registroOharrak" placeholder="Gehitu ohar... (EZ idatzi ikasleen izen-abizenik)" style="min-height: 80px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="guardarRegistro()">💾 Gorde</button>
+                        <button class="btn btn-secondary" onclick="limpiarRegistro()">🔄 Garbitu</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORIAL -->
+            <div class="page" id="historialPage">
+                <div class="page-header">
+                    <h1>📋 Historiala</h1>
+                </div>
+                <div class="section">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Ikastetxea</th>
+                                    <th>Eginkizuna</th>
+                                    <th>Ikaslea</th>
+                                    <th>Egoera</th>
+                                    <th>Ekintza</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historialTable">
+                                <tr><td colspan="6" class="no-data">Ez dago erregistrorik</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZENTROETAKO ERREGISTROA -->
+            <div class="page" id="centrosPage">
+                <div class="page-header">
+                    <h1>🏫 Zentroetako Erregistroa</h1>
+                    <p>Ikastetxe bakoitzaren eginkizunak eta eskaera guztiak</p>
+                </div>
+
+                <div id="centroDetalle" style="display: none;">
+                    <div class="section">
+                        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+                            <button class="btn btn-secondary" onclick="volverCentros()" style="flex: 0;">⬅️ Atzera</button>
+                            <h2 id="centroNombre" style="margin: 0; color: var(--dark);">Centro</h2>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                            <div class="stat-card">
+                                <h3>Erregistro Osoa</h3>
+                                <div class="number" id="centroTotalRegistros">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Egunkoak</h3>
+                                <div class="number" id="centroRegistrosHoy">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Aholkulariak</h3>
+                                <div class="number" id="centroAholkulariak">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Eginkizun Motak</h3>
+                                <div class="number" id="centroTareas">0</div>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Aholkularia</th>
+                                        <th>Eginkizuna</th>
+                                        <th>Ikaslea</th>
+                                        <th>Egoera</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="centroRegistrosTable">
+                                    <tr><td colspan="5" class="no-data">Ez dago erregistrorik</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="centroLista" style="display: block;">
+                    <div class="section">
+                        <h2>🏢 Zentroak Zerrenda</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;" id="centrosGrid">
+                            <div class="no-data">Kargan...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADMIN PANEL -->
+            <div class="page" id="adminPage">
+                <div class="page-header">
+                    <h1>⚙️ Administrazioa</h1>
+                    <p id="adminSubtitle"></p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Erregistro Osoa</h3>
+                        <div class="number" id="adminTotalRegistros">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Aholkulariak</h3>
+                        <div class="number" id="adminTotalAholkulariak">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Zentro Desberdina</h3>
+                        <div class="number" id="adminTotalCentros">0</div>
+                    </div>
+                </div>
+
+                <!-- GESTIÓN DE USUARIOS -->
+                <div class="section" id="adminGestionSekcio">
+                    <h2>👥 Aholkulariak Kudeaketa</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Izena *</label>
+                            <input type="text" id="adminNewNombre" placeholder="Aholkulariaren izena">
+                        </div>
+                        <div class="form-group">
+                            <label>Kodigoa *</label>
+                            <input type="text" id="adminNewCodigo" placeholder="Adib: AHL094">
+                        </div>
+                        <div class="form-group">
+                            <label>Berritzegune *</label>
+                            <input type="text" id="adminNewBerritzegune" placeholder="BERRITZEGUNE">
+                        </div>
+                        <div class="form-group">
+                            <label>Espezialitatea *</label>
+                            <select id="adminNewEspecialidad">
+                                <option value="">Aukeratu...</option>
+                                <option value="Inklusioa">Inklusioa</option>
+                                <option value="Bizikidetza">Bizikidetza</option>
+                                <option value="Posbentzioa">Posbentzioa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Zentroak (kodigo, zatituta koma)</label>
+                            <input type="text" id="adminNewCentros" placeholder="010258,010135,010138">
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="agregarAholkularia()">➕ Gehitu Aholkularia</button>
+                    </div>
+                </div>
+
+                <!-- TABLA DE USUARIOS -->
+                <div class="section">
+                    <h2>📊 Aholkulariak Zerrenda</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kodigoa</th>
+                                    <th>Izena</th>
+                                    <th>Berritzegune</th>
+                                    <th>Espezialitatea</th>
+                                    <th>Zentroak</th>
+                                    <th>Erregistroak</th>
+                                    <th id="aktzioaHead">Ekintza</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTable">
+                                <tr><td colspan="7" class="no-data">Kargan...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TODOS LOS REGISTROS -->
+                <div class="section">
+                    <h2>📋 Guztien Erregistroak</h2>
+                    <div class="button-group" id="exportButtonGroup">
+                        <button class="btn btn-primary" onclick="exportarExcelCompleto()">📥 Enportatu Excel Osoa</button>
+                        <button class="btn btn-secondary" onclick="exportarJSON()">💾 Deskargatü Backup</button>
+                    </div>
+                    <div class="table-container" style="margin-top: 20px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Aholkularia</th>
+                                    <th>Ikastetxea</th>
+                                    <th>Eginkizuna</th>
+                                    <th>Ikaslea</th>
+                                    <th>Egoera</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminAllRegistrosTable">
+                                <tr><td colspan="6" class="no-data">Ez dago erregistrorik</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.example.js"></script>
+    <script src="data.js"></script>
+    <script>
+        // ============ DATOS ESTÁTICOS ============
+        const datosAholkulariak = (window.DATOS_AHOLKULARIAK || []);
+
+        const datosCentros = (window.DATOS_CENTROS || []);
+
+        const datosEginkizunak = {
+            "Inklusioa": [
+                "Ebaluazio psikopedagogiko berria",
+                "Berriztu egin behar den ebaluazio psikopedagogikoa",
+                "Txosten psikopedagogikoa",
+                "Eskolatze proposamen-txostena",
+                "CNE-en kudeaketa",
+                "Jokabide kasuak",
+                "ZIP gelako eginbeharrak",
+                "LIP gelako eginbeharrak",
+                "Ikaslearen eskuhartze plana"
+            ],
+            "Bizikidetza": ["Jokabide kasuak", "Ikasleen konbibentzia"],
+            "Posbentzioa": ["Prebentzio programak"],
+            "Admin": []
+        };
+
+        // Eginkizun bakoitzak zein eremu behar dituen
+        const EGINKIZUN_EREMUAK = {
+            "Ebaluazio psikopedagogiko berria":                   { ikasleId: true,  ebaluazioMota: true,  zehaztu: false },
+            "Berriztu egin behar den ebaluazio psikopedagogikoa": { ikasleId: true,  ebaluazioMota: true,  zehaztu: false },
+            "Txosten psikopedagogikoa":                           { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
+            "Eskolatze proposamen-txostena":                      { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
+            "CNE-en kudeaketa":                                   { ikasleId: false, ebaluazioMota: false, zehaztu: false },
+            "Jokabide kasuak":                                    { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
+            "ZIP gelako eginbeharrak":                            { ikasleId: false, ebaluazioMota: false, zehaztu: true },
+            "LIP gelako eginbeharrak":                            { ikasleId: false, ebaluazioMota: false, zehaztu: true },
+            "Ikaslearen eskuhartze plana":                        { ikasleId: true,  ebaluazioMota: false, zehaztu: false }
+        };
+        const EREMU_LEHENETSIAK = { ikasleId: true, ebaluazioMota: false, zehaztu: false };
+
+        function updateEremuak() {
+            const tarea = document.getElementById('registroTarea').value;
+            const cfg = EGINKIZUN_EREMUAK[tarea] || EREMU_LEHENETSIAK;
+            document.getElementById('grupoIkaslea').style.display = cfg.ikasleId ? '' : 'none';
+            document.getElementById('grupoEbaluazioMota').style.display = cfg.ebaluazioMota ? '' : 'none';
+            document.getElementById('grupoZehaztu').style.display = cfg.zehaztu ? '' : 'none';
+        }
+
+        // ============ ESTADO GLOBAL ============
+        let usuarioActual = null;
+        let aholkulariak = JSON.parse(localStorage.getItem('hlbp_aholkulariak')) || datosAholkulariak;
+        let registros = JSON.parse(localStorage.getItem('hlbp_registros')) || [];
+
+        // ============ LOGIN ============
+        function login() {
+            const codigo = document.getElementById('codigoInput').value.toUpperCase().trim();
+            const errorDiv = document.getElementById('loginError');
+
+            if (!codigo) {
+                mostrarError('Kodigoa sartu behar da');
+                return;
+            }
+
+            const aholkularia = aholkulariak.find(a => a.codigo === codigo);
+            if (!aholkularia) {
+                mostrarError('Kodigoa ez dago aurkitzen');
+                return;
+            }
+
+            usuarioActual = aholkularia;
+            localStorage.setItem('hlbp_usuario_actual', JSON.stringify(aholkularia));
+
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('appContainer').classList.add('show');
+
+            cargarDatos();
+        }
+
+        function mostrarError(msg) {
+            const div = document.getElementById('loginError');
+            div.textContent = '❌ ' + msg;
+            div.classList.add('show');
+            setTimeout(() => div.classList.remove('show'), 3000);
+        }
+
+        // ============ CARGAR DATOS ============
+        function cargarDatos() {
+            if (!usuarioActual) return;
+
+            document.getElementById('userNameDisplay').textContent = usuarioActual.nombre;
+            document.getElementById('userSpecialtyDisplay').textContent = usuarioActual.especialidad;
+
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+            const isAHL = usuarioActual.codigo.startsWith('AHL');
+
+            // Erakutsi rol-aren etiketa
+            if (isMASTER) {
+                document.getElementById('userTypeDisplay').textContent = '⚙️ Admin Master';
+            } else if (isADMIN) {
+                document.getElementById('userTypeDisplay').textContent = '⚙️ Admin';
+            } else {
+                document.getElementById('userTypeDisplay').textContent = usuarioActual.especialidad;
+            }
+
+            // Mostrar/ocultar menú admin eta registro-ak
+            if (isMASTER) {
+                document.getElementById('navMenu').innerHTML = `
+                    <li class="nav-item"><button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="showPage('admin')">⚙️ Administrazioa</button></li>
+                `;
+                document.getElementById('registroPage').style.display = 'none';
+                document.getElementById('historialPage').style.display = 'none';
+            } else if (isADMIN) {
+                document.getElementById('navMenu').innerHTML = `
+                    <li class="nav-item"><button class="nav-link active" onclick="showPage('dashboard')">📊 Dashboard</button></li>
+                    <li class="nav-item"><button class="nav-link" onclick="showPage('admin')">⚙️ Administrazioa</button></li>
+                `;
+                document.getElementById('registroPage').style.display = 'none';
+                document.getElementById('historialPage').style.display = 'none';
+            } else if (isAHL) {
+                document.getElementById('registroPage').style.display = 'block';
+                document.getElementById('historialPage').style.display = 'block';
+                cargarSelectCentros();
+                cargarSelectTareas();
+            }
+
+            if (isAHL) {
+                document.getElementById('registroAholkularia').value = usuarioActual.nombre;
+                document.getElementById('registroData').value = new Date().toISOString().split('T')[0];
+            }
+
+            document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('eu-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            actualizarDashboard();
+
+            if (isAHL) {
+                actualizarHistorial();
+            } else if (isMASTER || isADMIN) {
+                actualizarAdminPanel();
+                // Aholkularia gehitu atalak MASTER bakarrik ikusgarria izan daiteke
+                document.getElementById('adminGestionSekcio').style.display = isMASTER ? 'block' : 'none';
+            }
+        }
+
+        // ============ DASHBOARD ============
+        function actualizarDashboard() {
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+            const isAHL = usuarioActual.codigo.startsWith('AHL');
+
+            if (isMASTER || isADMIN) {
+                // Admin panel baterako
+                document.getElementById('dashboardTitle').textContent = isMASTER ? '👨‍💼 Panel Master' : '⚙️ Panel Administrazioa';
+                actualizarEstadisticasAdmin();
+            } else if (isAHL) {
+                // Aholkulariarako
+                const misRegistros = registros.filter(r => r.aholkularia === usuarioActual.codigo);
+                const hoy = new Date().toISOString().split('T')[0];
+                const hoysRegistros = misRegistros.filter(r => r.data === hoy).length;
+
+                document.getElementById('dashboardTitle').textContent = 'Ongi etorri, ' + usuarioActual.nombre.split(',')[0] + '!';
+
+                const statsHtml = `
+                    <div class="stat-card">
+                        <h3>Erregistro Osoa</h3>
+                        <div class="number">${misRegistros.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Egunean</h3>
+                        <div class="number">${hoysRegistros}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Zentroak</h3>
+                        <div class="number">${usuarioActual.centros.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Eginkizunak</h3>
+                        <div class="number">${datosEginkizunak[usuarioActual.especialidad]?.length || 0}</div>
+                    </div>
+                `;
+                document.getElementById('statsContainer').innerHTML = statsHtml;
+
+                const userInfoHtml = `
+                    <h2>📌 Zure Deskubertzea</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Berritzegune</label>
+                            <input type="text" value="${usuarioActual.berritzegune}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Espezialitatea</label>
+                            <input type="text" value="${usuarioActual.especialidad}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Zentroak Asignaturik</label>
+                            <input type="text" value="${usuarioActual.centros.length}" readonly>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('userInfoSection').innerHTML = userInfoHtml;
+
+                const centrosDelUsuario = datosCentros.filter(c => usuarioActual.centros.includes(c.codigo));
+                const centrosHtml = `
+                    <h2>🏫 Zure Zentroak</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kodigoa</th>
+                                    <th>Ikastetxea</th>
+                                    <th>Udala</th>
+                                    <th>Eragingunea</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${centrosDelUsuario.map(c => `
+                                    <tr>
+                                        <td><strong>${c.codigo}</strong></td>
+                                        <td>${c.nombre}</td>
+                                        <td>${c.udalerria}</td>
+                                        <td><span class="badge badge-primary">${c.zona}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                document.getElementById('userCentrosSection').innerHTML = centrosHtml;
+            }
+        }
+
+        function actualizarEstadisticasAdmin() {
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+
+            let registrosFiltrados = registros;
+            let aholkulariakFiltrados = aholkulariak;
+
+            if (isADMIN) {
+                // Admin-ak bakarrik bere berritzegunearen aholkularia eta erregistroak ikus
+                aholkulariakFiltrados = aholkulariak.filter(a => a.berritzegune === usuarioActual.berritzegune);
+                const aholkulariakKodiguak = aholkulariakFiltrados.map(a => a.codigo);
+                registrosFiltrados = registros.filter(r => aholkulariakKodiguak.includes(r.aholkularia));
+            }
+
+            const centrosFiltrados = new Set(registrosFiltrados.map(r => r.centro)).size;
+
+            const statsHtml = `
+                <div class="stat-card">
+                    <h3>Erregistro Osoa</h3>
+                    <div class="number">${registrosFiltrados.length}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Aholkulariak Aktiboak</h3>
+                    <div class="number">${aholkulariakFiltrados.filter(a => a.codigo !== 'MASTER' && !a.codigo.startsWith('ADMIN')).length}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Zentro Desberdinak</h3>
+                    <div class="number">${centrosFiltrados}</div>
+                </div>
+            `;
+            document.getElementById('statsContainer').innerHTML = statsHtml;
+            document.getElementById('userInfoSection').innerHTML = '';
+            document.getElementById('userCentrosSection').innerHTML = '';
+        }
+
+        // ============ SELECTS ============
+        function cargarSelectCentros() {
+            const select = document.getElementById('registroCentro');
+            const centrosDelUsuario = datosCentros.filter(c => usuarioActual.centros.includes(c.codigo));
+
+            select.innerHTML = '<option value="">Aukeratu ikastetxea...</option>' +
+                centrosDelUsuario.map(c => `<option value="${c.codigo}">${c.nombre}</option>`).join('');
+        }
+
+        function cargarSelectTareas() {
+            const tareas = datosEginkizunak[usuarioActual.especialidad] || [];
+            const select = document.getElementById('registroTarea');
+
+            select.innerHTML = '<option value="">Aukeratu eginkizuna...</option>' +
+                tareas.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+
+        function updateTareas() {}
+
+        // ============ GUARDAR REGISTRO ============
+        function guardarRegistro() {
+            const centro = document.getElementById('registroCentro').value;
+            const tarea = document.getElementById('registroTarea').value;
+            const ikaslea = document.getElementById('registroIkaslea').value.trim();
+            const ebaluazioMota = document.getElementById('registroEbaluazioMota').value;
+            const zehaztu = document.getElementById('registroZehaztu').value.trim();
+            const data = document.getElementById('registroData').value;
+            const egoera = document.getElementById('registroEgoera').value;
+            const oharrak = document.getElementById('registroOharrak').value;
+
+            const cfg = EGINKIZUN_EREMUAK[tarea] || EREMU_LEHENETSIAK;
+
+            if (!centro || !tarea || !data) {
+                alert('Eremu guztiak (*) bete behar dira');
+                return;
+            }
+            if (cfg.ikasleId && !ikaslea) {
+                alert('Ikaslearen ID bete behar da (EZ erabili izen-abizenik, ID kodea bakarrik)');
+                return;
+            }
+            if (cfg.ebaluazioMota && !ebaluazioMota) {
+                alert('Ebaluazio mota aukeratu behar da');
+                return;
+            }
+            if (cfg.zehaztu && !zehaztu) {
+                alert('"Zehaztu" eremua bete behar da');
+                return;
+            }
+
+            const nuevoRegistro = {
+                id: Date.now(),
+                aholkularia: usuarioActual.codigo,
+                centro: datosCentros.find(c => c.codigo === centro)?.nombre || centro,
+                tarea,
+                ikaslea: cfg.ikasleId ? ikaslea : '',
+                ebaluazioMota: cfg.ebaluazioMota ? ebaluazioMota : '',
+                zehaztu: cfg.zehaztu ? zehaztu : '',
+                data,
+                egoera,
+                oharrak,
+                timestamp: new Date().toISOString()
+            };
+
+            registros.push(nuevoRegistro);
+            localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+
+            const alert = document.getElementById('successAlert');
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 3000);
+
+            limpiarRegistro();
+            actualizarHistorial();
+            actualizarDashboard();
+        }
+
+        function limpiarRegistro() {
+            document.getElementById('registroCentro').value = '';
+            document.getElementById('registroTarea').value = '';
+            document.getElementById('registroIkaslea').value = '';
+            document.getElementById('registroEbaluazioMota').value = '';
+            document.getElementById('registroZehaztu').value = '';
+            document.getElementById('registroOharrak').value = '';
+            document.getElementById('registroEgoera').value = 'Egin gabe';
+            updateEremuak();
+        }
+
+        // ============ HISTORIAL ============
+        function actualizarHistorial() {
+            const misRegistros = registros.filter(r => r.aholkularia === usuarioActual.codigo).reverse();
+            const tbody = document.getElementById('historialTable');
+
+            if (misRegistros.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Ez dago erregistrorik</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = misRegistros.map(r => `
+                <tr>
+                    <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                    <td>${r.centro}</td>
+                    <td><small>${r.tarea}${r.ebaluazioMota ? ' (' + r.ebaluazioMota + ')' : ''}${r.zehaztu ? ' — ' + r.zehaztu : ''}</small></td>
+                    <td><strong>${r.ikaslea || '—'}</strong></td>
+                    <td><span class="badge badge-${r.egoera === 'Eginda' ? 'success' : 'primary'}">${r.egoera}</span></td>
+                    <td><button class="btn btn-danger" onclick="eliminarRegistro(${r.id})">Ezabatu</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function eliminarRegistro(id) {
+            if (confirm('Ziur al zaude?')) {
+                registros = registros.filter(r => r.id !== id);
+                localStorage.setItem('hlbp_registros', JSON.stringify(registros));
+                actualizarHistorial();
+                actualizarDashboard();
+            }
+        }
+
+        // ============ ADMIN PANEL ============
+        function actualizarAdminPanel() {
+            const isMASTER = usuarioActual.codigo === 'MASTER';
+            const isADMIN = usuarioActual.codigo.startsWith('ADMIN');
+
+            // Ezkutatu Ekintza (Ezabatu) botoia eta exportazio botoiak ADMIN-arentzat
+            document.getElementById('aktzioaHead').style.display = isMASTER ? 'table-cell' : 'none';
+            document.getElementById('exportButtonGroup').style.display = isMASTER ? 'flex' : 'none';
+
+            // Filtratu aholkularia eta erregistroak rola araberagatik
+            let aholkulariakaForTabla = aholkulariak.filter(a => a.codigo !== 'MASTER' && !a.codigo.startsWith('ADMIN'));
+            let registrosParaTabla = registros;
+
+            if (isADMIN) {
+                // Admin-ak bakarrik bere berritzegunearen aholkularia
+                aholkulariakaForTabla = aholkulariakaForTabla.filter(a => a.berritzegune === usuarioActual.berritzegune);
+                const aholkulariakKodiguak = aholkulariakaForTabla.map(a => a.codigo);
+                registrosParaTabla = registros.filter(r => aholkulariakKodiguak.includes(r.aholkularia));
+            }
+
+            // Eguneratu estadistikak
+            document.getElementById('adminTotalRegistros').textContent = registrosParaTabla.length;
+            document.getElementById('adminTotalAholkulariak').textContent = aholkulariakaForTabla.length;
+            document.getElementById('adminTotalCentros').textContent = new Set(registrosParaTabla.map(r => r.centro)).size;
+
+            // Eguneratu aholkularia taula
+            const tbody = document.getElementById('adminUsersTable');
+            tbody.innerHTML = aholkulariakaForTabla.map(a => {
+                const misRegistros = registrosParaTabla.filter(r => r.aholkularia === a.codigo);
+                return `
+                    <tr onclick="mostrarPanelAholkularia('${a.codigo}')" style="cursor: pointer;">
+                        <td><strong>${a.codigo}</strong></td>
+                        <td>${a.nombre}</td>
+                        <td>${a.berritzegune}</td>
+                        <td><span class="badge badge-primary">${a.especialidad}</span></td>
+                        <td>${a.centros.length} zentro</td>
+                        <td>
+                            <small style="color: #999;">${misRegistros.length} erregistro</small>
+                        </td>
+                        <td style="display: ${isMASTER ? 'table-cell' : 'none'};"><button class="btn btn-danger" onclick="event.stopPropagation(); eliminarAholkularia('${a.codigo}')">Ezabatu</button></td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Eguneratu erregistroa taula
+            const registrosTable = document.getElementById('adminAllRegistrosTable');
+            registrosTable.innerHTML = registrosParaTabla.reverse().map(r => `
+                <tr>
+                    <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                    <td>${r.aholkularia}</td>
+                    <td>${r.centro}</td>
+                    <td><small>${r.tarea}</small></td>
+                    <td><strong>${r.ikaslea}</strong></td>
+                    <td><span class="badge badge-success">${r.egoera}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Aholkularia panela ageri daiteke (izenean klika)
+        function mostrarPanelAholkularia(codigo) {
+            const aholkularia = aholkulariak.find(a => a.codigo === codigo);
+            if (!aholkularia) return;
+
+            alert('🔍 ' + aholkularia.nombre + '\n' + aholkularia.berritzegune + '\n' + aholkularia.especialidad);
+        }
+
+        function agregarAholkularia() {
+            // MASTER bakarrik aholkularia gehitu dezake
+            if (usuarioActual.codigo !== 'MASTER') {
+                alert('⛔ Admin bakarrik aholkularia gehitu dezake');
+                return;
+            }
+
+            const nombre = document.getElementById('adminNewNombre').value;
+            const codigo = document.getElementById('adminNewCodigo').value.toUpperCase();
+            const berritzegune = document.getElementById('adminNewBerritzegune').value;
+            const especialidad = document.getElementById('adminNewEspecialidad').value;
+            const centrosStr = document.getElementById('adminNewCentros').value;
+
+            if (!nombre || !codigo || !berritzegune || !especialidad || !centrosStr) {
+                alert('Betshi osatu behar dira denak (*)');
+                return;
+            }
+
+            if (aholkulariak.find(a => a.codigo === codigo)) {
+                alert('Kodigoa dagoeneko existitzen da');
+                return;
+            }
+
+            const centros = centrosStr.split(',').map(c => c.trim());
+
+            aholkulariak.push({
+                codigo,
+                nombre,
+                berritzegune,
+                especialidad,
+                centros
+            });
+
+            localStorage.setItem('hlbp_aholkulariak', JSON.stringify(aholkulariak));
+
+            alert('✅ Aholkularia gehitu da ✅\nKodigoa: ' + codigo);
+
+            document.getElementById('adminNewNombre').value = '';
+            document.getElementById('adminNewCodigo').value = '';
+            document.getElementById('adminNewBerritzegune').value = '';
+            document.getElementById('adminNewEspecialidad').value = '';
+            document.getElementById('adminNewCentros').value = '';
+
+            actualizarAdminPanel();
+        }
+
+        function eliminarAholkularia(codigo) {
+            if (confirm('Ziur al zaude ezabatu nahi duzula?')) {
+                aholkulariak = aholkulariak.filter(a => a.codigo !== codigo);
+                localStorage.setItem('hlbp_aholkulariak', JSON.stringify(aholkulariak));
+                actualizarAdminPanel();
+            }
+        }
+
+        // ============ EXPORTACIONES ============
+        function exportarExcelCompleto() {
+            let csv = "Data\tAholkularia\tIkastetxea\tEginkizuna\tEbaluazio mota\tZehaztu\tIkaslearen ID\tEgoera\tOharrak\n";
+            registros.forEach(r => {
+                csv += `${r.data}\t${r.aholkularia}\t${r.centro}\t${r.tarea}\t${r.ebaluazioMota || ''}\t${r.zehaztu || ''}\t${r.ikaslea || ''}\t${r.egoera}\t${r.oharrak}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `HLBP_Guztia_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        function exportarJSON() {
+            const backup = {
+                aholkulariak,
+                registros,
+                exportedAt: new Date().toISOString()
+            };
+
+            const json = JSON.stringify(backup, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `HLBP_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // ============ CENTROS ============
+        let centroPorVerDetalles = null;
+
+        function cargarCentros() {
+            const centrosConRegistros = {};
+
+            registros.forEach(r => {
+                if (!centrosConRegistros[r.centro]) {
+                    centrosConRegistros[r.centro] = [];
+                }
+                centrosConRegistros[r.centro].push(r);
+            });
+
+            const grid = document.getElementById('centrosGrid');
+            const centrosUnicos = [...new Set(registros.map(r => r.centro))];
+
+            if (centrosUnicos.length === 0) {
+                grid.innerHTML = '<div class="no-data">Ez dago erregistrorik oraindik</div>';
+                return;
+            }
+
+            grid.innerHTML = centrosUnicos.map(centro => {
+                const registrosCentro = centrosConRegistros[centro] || [];
+                const hoy = new Date().toISOString().split('T')[0];
+                const hoysRegistros = registrosCentro.filter(r => r.data === hoy).length;
+                const aholkulariak = new Set(registrosCentro.map(r => r.aholkularia)).size;
+                const tareas = new Set(registrosCentro.map(r => r.tarea)).size;
+
+                return `
+                    <div class="centro-card" onclick="verDetalleCentro('${centro}')">
+                        <h3>🏫 ${centro}</h3>
+                        <p>Erregistroak: ${registrosCentro.length}</p>
+                        <div class="centro-stats">
+                            <div class="centro-stat-item">
+                                <div class="label">Egunkoak</div>
+                                <div class="value">${hoysRegistros}</div>
+                            </div>
+                            <div class="centro-stat-item">
+                                <div class="label">Aholkulariak</div>
+                                <div class="value">${aholkulariak}</div>
+                            </div>
+                            <div class="centro-stat-item">
+                                <div class="label">Eginkizunak</div>
+                                <div class="value">${tareas}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function verDetalleCentro(centro) {
+            centroPorVerDetalles = centro;
+            const registrosCentro = registros.filter(r => r.centro === centro);
+            const hoy = new Date().toISOString().split('T')[0];
+            const hoysRegistros = registrosCentro.filter(r => r.data === hoy).length;
+            const aholkulariak = new Set(registrosCentro.map(r => r.aholkularia)).size;
+            const tareas = new Set(registrosCentro.map(r => r.tarea)).size;
+
+            document.getElementById('centroNombre').textContent = `🏫 ${centro}`;
+            document.getElementById('centroTotalRegistros').textContent = registrosCentro.length;
+            document.getElementById('centroRegistrosHoy').textContent = hoysRegistros;
+            document.getElementById('centroAholkulariak').textContent = aholkulariak;
+            document.getElementById('centroTareas').textContent = tareas;
+
+            const tbody = document.getElementById('centroRegistrosTable');
+            if (registrosCentro.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-data">Ez dago erregistrorik</td></tr>';
+            } else {
+                tbody.innerHTML = registrosCentro.reverse().map(r => `
+                    <tr>
+                        <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
+                        <td><strong>${r.aholkularia}</strong></td>
+                        <td><small>${r.tarea}</small></td>
+                        <td>${r.ikaslea}</td>
+                        <td><span class="badge badge-${r.egoera === 'Osatu' ? 'success' : 'primary'}">${r.egoera}</span></td>
+                    </tr>
+                `).join('');
+            }
+
+            document.getElementById('centroLista').style.display = 'none';
+            document.getElementById('centroDetalle').style.display = 'block';
+        }
+
+        function volverCentros() {
+            centroPorVerDetalles = null;
+            document.getElementById('centroLista').style.display = 'block';
+            document.getElementById('centroDetalle').style.display = 'none';
+        }
+
+        // ============ NAVEGACIÓN ============
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+
+            const pages = {
+                'dashboard': 'dashboardPage',
+                'registro': 'registroPage',
+                'historial': 'historialPage',
+                'centros': 'centrosPage',
+                'admin': 'adminPage'
+            };
+
+            const page = document.getElementById(pages[pageName]);
+            if (page) page.classList.add('active');
+
+            event.target.classList.add('active');
+
+            if (pageName === 'admin') actualizarAdminPanel();
+            if (pageName === 'centros') cargarCentros();
+        }
+
+        // ============ LOGOUT ============
+        function logout() {
+            if (confirm('Ziur al zaude irten nahi duzula?')) {
+                usuarioActual = null;
+                localStorage.removeItem('hlbp_usuario_actual');
+
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.getElementById('appContainer').classList.remove('show');
+                document.getElementById('codigoInput').value = '';
+                document.getElementById('codigoInput').focus();
+            }
+        }
+
+        // ============ INICIALIZACIÓN ============
+        window.addEventListener('DOMContentLoaded', () => {
+            const usuarioGuardado = localStorage.getItem('hlbp_usuario_actual');
+            if (usuarioGuardado) {
+                usuarioActual = JSON.parse(usuarioGuardado);
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('appContainer').classList.add('show');
+                cargarDatos();
+            } else {
+                document.getElementById('codigoInput').focus();
+            }
+
+            document.getElementById('codigoInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') login();
+            });
+        });
+    </script>
+</body>
+</html>
+
+

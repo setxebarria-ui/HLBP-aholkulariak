@@ -1,0 +1,24 @@
+# ============================================
+# DATU SENTIKORRAK - EZ IGO GITHUB-ERA INOIZ
+# ============================================
+
+# Aholkularien izen errealak dituen fitxategia
+data.js
+
+# Excel fitxategiak (izen errealak dituzte)
+*.xlsx
+
+# Fitxategi zaharrak (izen errealak dituzte)
+HLBP_App_Aholkulariak.html
+HLBP_Kudeaketa_Aholkulariak.html
+
+# Dokumentu zaharrak (baliteke izen errealak izatea)
+HLBP_SISTEMA_OSOA.md
+HLBP_POWER_AUTOMATE_GUIA.md
+HLBP_REFERENCIA_RAPIDA.txt
+
+# Bestelakoak
+free-claude-code/
+free-claude-code-main/
+free-claude-code-main.zip
+.claude/
