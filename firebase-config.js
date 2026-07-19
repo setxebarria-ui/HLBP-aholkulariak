@@ -9,17 +9,12 @@
 // Datu-basean ez da izen errealik gordetzen: kodigoak eta ikasle-IDak bakarrik.
 // ============================================================
 
-window.FIREBASE_CONFIG = null;
-
-/* Zure konfigurazioa jasotakoan honela geratuko da:
-
 window.FIREBASE_CONFIG = {
-    apiKey: "AIza...",
-    authDomain: "hlbp-xxxxx.firebaseapp.com",
-    databaseURL: "https://hlbp-xxxxx-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "hlbp-xxxxx",
-    storageBucket: "hlbp-xxxxx.appspot.com",
-    messagingSenderId: "...",
-    appId: "..."
+    apiKey: "AIzaSyDGHFRTa2_aouR2bZNa24YuaWekBu5FUqs",
+    authDomain: "hlbp-f8f0e.firebaseapp.com",
+    databaseURL: "https://hlbp-f8f0e-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "hlbp-f8f0e",
+    storageBucket: "hlbp-f8f0e.firebasestorage.app",
+    messagingSenderId: "577986144861",
+    appId: "1:577986144861:web:b94d8aff602ad1387bfbb4"
 };
-*/
