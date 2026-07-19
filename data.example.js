@@ -1,6 +1,5 @@
 ﻿// ============================================================
-// HLBP - ADIBIDE DATUAK (izen generikoak, zentro esleipen errealak)
-// Benetako izenak: kopiatu 'data.js' izenarekin eta aldatu izenak.
+// HLBP - ADIBIDE DATUAK (izen generikoak, esleipen errealak)
 // ============================================================
 window.DATOS_AHOLKULARIAK = [
     { codigo: "AHL001", nombre: "Aholkulari 1", berritzegune: "BERRITZEGUNE B08", especialidad: "Inklusioa", centros: ["014470","014844","014848","015015"] },
@@ -37,7 +36,7 @@ window.DATOS_AHOLKULARIAK = [
     { codigo: "AHL032", nombre: "Aholkulari 32", berritzegune: "BERRITZEGUNE G05", especialidad: "Inklusioa", centros: ["012002","012037","012137","012153","012288","012291","012292","012350","012399","012726","012985","013070","013635"] },
     { codigo: "AHL033", nombre: "Aholkulari 33", berritzegune: "BERRITZEGUNE B07", especialidad: "Inklusioa", centros: ["014287","014367","014384","014529","014747","014751","014754","014865","015143"] },
     { codigo: "AHL034", nombre: "Aholkulari 34", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["014457","014727","014731","014732","014920","014938","014950","014974","015090","015307","015342"] },
-    { codigo: "AHL035", nombre: "Aholkulari 35", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["014109","014111","014186","014508","014509","014658","015191","015360"] },
+    { codigo: "AHL035", nombre: "Aholkulari 35", berritzegune: "BERRITZEGUNE B01", especialidad: "Inklusioa", centros: ["014109","014111","014186","014508","014509","014658","015191","015360"] },
     { codigo: "AHL036", nombre: "Aholkulari 36", berritzegune: "BERRITZEGUNE B03", especialidad: "Inklusioa", centros: ["014390","014391","014430","014438","014441","014550","014817","014928","014976"] },
     { codigo: "AHL037", nombre: "Aholkulari 37", berritzegune: "BERRITZEGUNE B02", especialidad: "Inklusioa", centros: ["014149","014618","014619","014637","014643","014680","014704","015075","015833"] },
     { codigo: "AHL038", nombre: "Aholkulari 38", berritzegune: "BERRITZEGUNE G01", especialidad: "Inklusioa", centros: ["012184","012202","012479","012485","012490","012492","012494","012495","012722","013025","013624"] },
@@ -87,7 +86,7 @@ window.DATOS_AHOLKULARIAK = [
     { codigo: "AHL082", nombre: "Aholkulari 82", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010003","010009","010142","010192","010723"] },
     { codigo: "AHL083", nombre: "Aholkulari 83", berritzegune: "BERRITZEGUNE G05", especialidad: "Inklusioa", centros: ["012019","012038","012073","012320","012386","012585","012586","013380","013555","013556"] },
     { codigo: "AHL084", nombre: "Aholkulari 84", berritzegune: "BERRITZEGUNE B05", especialidad: "Inklusioa", centros: ["014004","014010","014401","014445","014492","014549","014799","014824","014958","015757","015870","015892"] },
-    { codigo: "AHL085", nombre: "Aholkulari 85", berritzegune: "BERRITZEGUNE A02", especialidad: "Inklusioa", centros: ["010002","010049","010214","010221","010222","010229","010234","010514","010613"] },
+    { codigo: "AHL085", nombre: "Aholkulari 85", berritzegune: "BERRITZEGUNE A01", especialidad: "Inklusioa", centros: ["010002","010049","010214","010221","010222","010229","010234","010514","010613"] },
     { codigo: "AHL086", nombre: "Aholkulari 86", berritzegune: "BERRITZEGUNE G06", especialidad: "Inklusioa", centros: ["012261","012310","012378","012729","012957","012973","012974","012975","013022","013437","013532","013554"] },
     { codigo: "AHL087", nombre: "Aholkulari 87", berritzegune: "BERRITZEGUNE B09", especialidad: "Inklusioa", centros: ["014258","014260","014372","014452","014520","014726","015082","015100","015189","015376","015463","015667","015779"] },
     { codigo: "AHL088", nombre: "Aholkulari 88", berritzegune: "BERRITZEGUNE B06", especialidad: "Inklusioa", centros: ["014027","014029","014073","014074","014237","014279","014280","014379","015245"] },
