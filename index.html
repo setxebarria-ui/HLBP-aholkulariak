@@ -664,22 +664,29 @@
                                 <option value="">Aukeratu eginkizuna...</option>
                             </select>
                         </div>
+                        <div class="form-group" id="grupoMota" style="display: none;">
+                            <label>Mota *</label>
+                            <select id="registroMota" onchange="updateMotaEremuak()">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grupoAzpiMota" style="display: none;">
+                            <label>Azpi-mota *</label>
+                            <select id="registroAzpiMota">
+                                <option value=""></option>
+                            </select>
+                        </div>
                         <div class="form-group" id="grupoIkaslea">
                             <label>Ikaslearen ID *</label>
                             <input type="text" id="registroIkaslea" placeholder="Adib: IK-0234 (EZ izen-abizenik)">
                         </div>
-                        <div class="form-group" id="grupoEbaluazioMota" style="display: none;">
-                            <label>Ebaluazio mota *</label>
-                            <select id="registroEbaluazioMota">
-                                <option value="">Aukeratu...</option>
-                                <option value="AGH">AGH</option>
-                                <option value="AEN">AEN</option>
-                                <option value="Bestelakoa">Bestelakoa</option>
-                            </select>
+                        <div class="form-group">
+                            <label>Egiteko data *</label>
+                            <input type="date" id="registroData">
                         </div>
                         <div class="form-group">
-                            <label>Data *</label>
-                            <input type="date" id="registroData">
+                            <label>Amaiera-data</label>
+                            <input type="date" id="registroAmaieraData">
                         </div>
                         <div class="form-group">
                             <label>Egoera</label>
@@ -1842,41 +1849,106 @@
 
         const datosEginkizunak = {
             "Inklusioa": [
-                "Ebaluazio psikopedagogiko berria",
-                "Berriztu egin behar den ebaluazio psikopedagogikoa",
-                "Txosten psikopedagogikoa",
-                "Eskolatze proposamen-txostena",
+                "Ebaluazio psikopedagogiko berriak",
+                "Protokoloak",
+                "Txostenak",
+                "Eskolatze proposamen berriak",
                 "CNE-en kudeaketa",
                 "Jokabide kasuak",
                 "ZIP gelako eginbeharrak",
                 "LIP gelako eginbeharrak",
-                "Ikaslearen eskuhartze plana"
+                "Etapa aldaketak"
             ],
             "Bizikidetza": ["Jokabide kasuak", "Ikasleen konbibentzia"],
             "Posbentzioa": ["Prebentzio programak"],
             "Admin": []
         };
 
-        // Eginkizun bakoitzak zein eremu behar dituen
-        const EGINKIZUN_EREMUAK = {
-            "Ebaluazio psikopedagogiko berria":                   { ikasleId: true,  ebaluazioMota: true,  zehaztu: false },
-            "Berriztu egin behar den ebaluazio psikopedagogikoa": { ikasleId: true,  ebaluazioMota: true,  zehaztu: false },
-            "Txosten psikopedagogikoa":                           { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
-            "Eskolatze proposamen-txostena":                      { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
-            "CNE-en kudeaketa":                                   { ikasleId: false, ebaluazioMota: false, zehaztu: false },
-            "Jokabide kasuak":                                    { ikasleId: true,  ebaluazioMota: false, zehaztu: false },
-            "ZIP gelako eginbeharrak":                            { ikasleId: false, ebaluazioMota: false, zehaztu: true },
-            "LIP gelako eginbeharrak":                            { ikasleId: false, ebaluazioMota: false, zehaztu: true },
-            "Ikaslearen eskuhartze plana":                        { ikasleId: true,  ebaluazioMota: false, zehaztu: false }
+        // Eginkizun bakoitzaren motak, azpi-motak eta eremuak (Eginkizunak.xlsx-tik)
+        const EGINKIZUN_KONFIG = {
+            "Ebaluazio psikopedagogiko berriak": {
+                ikasleId: true,
+                motak: ["Balidatzea", "Berria", "100.2A", "105 adimen kognitibia", "6. Mailako birrebaluazioa", "Besteak"],
+                motaZehaztu: ["Besteak"]
+            },
+            "Protokoloak": {
+                ikasleId: true,
+                motak: ["AGH", "AG", "TDL", "IZE", "KSHO"],
+                azpiMotak: ["2. fasetik 3. fasera jarraipena", "3. faseko ebaluazioa"]
+            },
+            "Txostenak": {
+                ikasleId: true,
+                motak: ["Ebaluazio psikopedagogikoa", "Osatuz programetarako txostena", "Osagarri programetarako txostena"]
+            },
+            "Eskolatze proposamen berriak": { ikasleId: true, zehaztu: true },
+            "CNE-en kudeaketa": { ikasleId: true, motak: ["Arlokoa", "Globala"] },
+            "Jokabide kasuak": { ikasleId: true },
+            "ZIP gelako eginbeharrak": { ikasleId: false, zehaztu: true },
+            "LIP gelako eginbeharrak": { ikasleId: false, zehaztu: true },
+            "Etapa aldaketak": { ikasleId: true, zehaztu: true }
         };
-        const EREMU_LEHENETSIAK = { ikasleId: true, ebaluazioMota: false, zehaztu: false };
+        const EREMU_LEHENETSIAK = { ikasleId: true };
 
+        // Eginkizuna aldatzean: mota-zerrenda kargatu eta eremuak egokitu
         function updateEremuak() {
             const tarea = document.getElementById('registroTarea').value;
-            const cfg = EGINKIZUN_EREMUAK[tarea] || EREMU_LEHENETSIAK;
+            const cfg = EGINKIZUN_KONFIG[tarea] || EREMU_LEHENETSIAK;
+
+            const motaSelect = document.getElementById('registroMota');
+            if (cfg.motak) {
+                motaSelect.innerHTML = '<option value="">Aukeratu mota...</option>' +
+                    cfg.motak.map(m => `<option value="${m}">${m}</option>`).join('');
+                document.getElementById('grupoMota').style.display = '';
+            } else {
+                motaSelect.innerHTML = '<option value=""></option>';
+                document.getElementById('grupoMota').style.display = 'none';
+            }
+
+            document.getElementById('registroAzpiMota').innerHTML = '<option value=""></option>';
+            document.getElementById('grupoAzpiMota').style.display = 'none';
             document.getElementById('grupoIkaslea').style.display = cfg.ikasleId ? '' : 'none';
-            document.getElementById('grupoEbaluazioMota').style.display = cfg.ebaluazioMota ? '' : 'none';
-            document.getElementById('grupoZehaztu').style.display = cfg.zehaztu ? '' : 'none';
+            actualizarZehaztuEremua();
+        }
+
+        // Mota aldatzean: azpi-motak kargatu (badaude) eta Zehaztu eremua egokitu
+        function updateMotaEremuak() {
+            const tarea = document.getElementById('registroTarea').value;
+            const cfg = EGINKIZUN_KONFIG[tarea] || {};
+            const mota = document.getElementById('registroMota').value;
+
+            const azpiSelect = document.getElementById('registroAzpiMota');
+            if (cfg.azpiMotak && mota) {
+                azpiSelect.innerHTML = '<option value="">Aukeratu azpi-mota...</option>' +
+                    cfg.azpiMotak.map(m => `<option value="${m}">${m}</option>`).join('');
+                document.getElementById('grupoAzpiMota').style.display = '';
+            } else {
+                azpiSelect.innerHTML = '<option value=""></option>';
+                document.getElementById('grupoAzpiMota').style.display = 'none';
+            }
+            actualizarZehaztuEremua();
+        }
+
+        // "Zehaztu" testu-eremua noiz behar den: eginkizunak eskatzen badu,
+        // edo aukeratutako motak eskatzen badu (adib. "Besteak")
+        function zehaztuBeharDa() {
+            const tarea = document.getElementById('registroTarea').value;
+            const cfg = EGINKIZUN_KONFIG[tarea] || {};
+            const mota = document.getElementById('registroMota').value;
+            return !!(cfg.zehaztu || (cfg.motaZehaztu && cfg.motaZehaztu.includes(mota)));
+        }
+
+        function actualizarZehaztuEremua() {
+            document.getElementById('grupoZehaztu').style.display = zehaztuBeharDa() ? '' : 'none';
+        }
+
+        // Erregistro baten eginkizun-deskribapen osoa (mota eta azpi-motekin)
+        function eginkizunTestua(r) {
+            let t = r.tarea;
+            const mota = r.mota || r.ebaluazioMota; // erregistro zaharren bateragarritasuna
+            if (mota) t += ' · ' + mota;
+            if (r.azpiMota) t += ' · ' + r.azpiMota;
+            if (r.zehaztu) t += ' — ' + r.zehaztu;
+            return t;
         }
 
         // ============ ESTADO GLOBAL ============
@@ -2204,28 +2276,34 @@
         function guardarRegistro() {
             const centro = document.getElementById('registroCentro').value;
             const tarea = document.getElementById('registroTarea').value;
+            const mota = document.getElementById('registroMota').value;
+            const azpiMota = document.getElementById('registroAzpiMota').value;
             const ikaslea = document.getElementById('registroIkaslea').value.trim();
-            const ebaluazioMota = document.getElementById('registroEbaluazioMota').value;
             const zehaztu = document.getElementById('registroZehaztu').value.trim();
             const data = document.getElementById('registroData').value;
+            const amaieraData = document.getElementById('registroAmaieraData').value;
             const egoera = document.getElementById('registroEgoera').value;
             const oharrak = document.getElementById('registroOharrak').value;
 
-            const cfg = EGINKIZUN_EREMUAK[tarea] || EREMU_LEHENETSIAK;
+            const cfg = EGINKIZUN_KONFIG[tarea] || EREMU_LEHENETSIAK;
 
             if (!centro || !tarea || !data) {
                 alert('Eremu guztiak (*) bete behar dira');
+                return;
+            }
+            if (cfg.motak && !mota) {
+                alert('Mota aukeratu behar da');
+                return;
+            }
+            if (cfg.azpiMotak && !azpiMota) {
+                alert('Azpi-mota aukeratu behar da');
                 return;
             }
             if (cfg.ikasleId && !ikaslea) {
                 alert('Ikaslearen ID bete behar da (EZ erabili izen-abizenik, ID kodea bakarrik)');
                 return;
             }
-            if (cfg.ebaluazioMota && !ebaluazioMota) {
-                alert('Ebaluazio mota aukeratu behar da');
-                return;
-            }
-            if (cfg.zehaztu && !zehaztu) {
+            if (zehaztuBeharDa() && !zehaztu) {
                 alert('"Zehaztu" eremua bete behar da');
                 return;
             }
@@ -2235,10 +2313,12 @@
                 aholkularia: usuarioActual.codigo,
                 centro: datosCentros.find(c => c.codigo === centro)?.nombre || centro,
                 tarea,
+                mota: cfg.motak ? mota : '',
+                azpiMota: cfg.azpiMotak ? azpiMota : '',
                 ikaslea: cfg.ikasleId ? ikaslea : '',
-                ebaluazioMota: cfg.ebaluazioMota ? ebaluazioMota : '',
-                zehaztu: cfg.zehaztu ? zehaztu : '',
+                zehaztu: zehaztuBeharDa() ? zehaztu : '',
                 data,
+                amaieraData: amaieraData || '',
                 egoera,
                 oharrak,
                 timestamp: new Date().toISOString()
@@ -2264,9 +2344,11 @@
         function limpiarRegistro() {
             document.getElementById('registroCentro').value = '';
             document.getElementById('registroTarea').value = '';
+            document.getElementById('registroMota').value = '';
+            document.getElementById('registroAzpiMota').value = '';
             document.getElementById('registroIkaslea').value = '';
-            document.getElementById('registroEbaluazioMota').value = '';
             document.getElementById('registroZehaztu').value = '';
+            document.getElementById('registroAmaieraData').value = '';
             document.getElementById('registroOharrak').value = '';
             document.getElementById('registroEgoera').value = 'Egin gabe';
             updateEremuak();
@@ -2286,7 +2368,7 @@
                 <tr>
                     <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
                     <td>${r.centro}</td>
-                    <td><small>${r.tarea}${r.ebaluazioMota ? ' (' + r.ebaluazioMota + ')' : ''}${r.zehaztu ? ' — ' + r.zehaztu : ''}</small></td>
+                    <td><small>${eginkizunTestua(r)}</small></td>
                     <td><strong>${r.ikaslea || '—'}</strong></td>
                     <td><span class="badge badge-${r.egoera === 'Eginda' ? 'success' : 'primary'}">${r.egoera}</span></td>
                     <td><button class="btn btn-danger" onclick="eliminarRegistro(${r.id})">Ezabatu</button></td>
@@ -2358,7 +2440,7 @@
                     <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
                     <td>${r.aholkularia}</td>
                     <td>${r.centro}</td>
-                    <td><small>${r.tarea}</small></td>
+                    <td><small>${eginkizunTestua(r)}</small></td>
                     <td><strong>${r.ikaslea}</strong></td>
                     <td><span class="badge badge-success">${r.egoera}</span></td>
                 </tr>
@@ -2407,7 +2489,7 @@
                     <tr>
                         <td><strong>${r.ikaslea || '—'}</strong></td>
                         <td>${r.centro}</td>
-                        <td><small>${r.tarea}${r.ebaluazioMota ? ' (' + r.ebaluazioMota + ')' : ''}${r.zehaztu ? ' — ' + r.zehaztu : ''}</small></td>
+                        <td><small>${eginkizunTestua(r)}</small></td>
                         <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
                     </tr>`).join('');
 
@@ -2417,7 +2499,7 @@
                     <tr>
                         <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
                         <td>${r.centro}</td>
-                        <td><small>${r.tarea}${r.ebaluazioMota ? ' (' + r.ebaluazioMota + ')' : ''}</small></td>
+                        <td><small>${eginkizunTestua(r)}</small></td>
                         <td><strong>${r.ikaslea || '—'}</strong></td>
                         <td><span class="badge badge-${r.egoera === 'Eginda' ? 'success' : 'primary'}">${r.egoera}</span></td>
                     </tr>`).join('');
@@ -2562,9 +2644,9 @@
 
         // ============ EXPORTACIONES ============
         function exportarExcelCompleto() {
-            let csv = "Data\tAholkularia\tIkastetxea\tEginkizuna\tEbaluazio mota\tZehaztu\tIkaslearen ID\tEgoera\tOharrak\n";
+            let csv = "Egiteko data\tAmaiera-data\tAholkularia\tIkastetxea\tEginkizuna\tMota\tAzpi-mota\tZehaztu\tIkaslearen ID\tEgoera\tOharrak\n";
             registros.forEach(r => {
-                csv += `${r.data}\t${r.aholkularia}\t${r.centro}\t${r.tarea}\t${r.ebaluazioMota || ''}\t${r.zehaztu || ''}\t${r.ikaslea || ''}\t${r.egoera}\t${r.oharrak}\n`;
+                csv += `${r.data}\t${r.amaieraData || ''}\t${r.aholkularia}\t${r.centro}\t${r.tarea}\t${r.mota || r.ebaluazioMota || ''}\t${r.azpiMota || ''}\t${r.zehaztu || ''}\t${r.ikaslea || ''}\t${r.egoera}\t${r.oharrak}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -2687,7 +2769,7 @@
                     <tr>
                         <td>${new Date(r.data).toLocaleDateString('eu-ES')}</td>
                         <td><strong>${r.aholkularia}</strong></td>
-                        <td><small>${r.tarea}</small></td>
+                        <td><small>${eginkizunTestua(r)}</small></td>
                         <td>${r.ikaslea || '—'}</td>
                         <td><span class="badge badge-${r.egoera === 'Eginda' ? 'success' : 'primary'}">${r.egoera}</span></td>
                     </tr>
@@ -2773,6 +2855,7 @@
     </div>
 </body>
 </html>
+
 
 
 
